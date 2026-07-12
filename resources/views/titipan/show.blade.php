@@ -92,12 +92,7 @@
             </ul>
         </div>
 
-        @php
-            $authId = auth()->id();
-            $sudahUlasan = $titipan->ulasan->firstWhere('dari_user_id', $authId);
-            $bisaUlasan = $titipan->status === 'selesai'
-                && ($titipan->pembeli_id === $authId || $titipan->driver_id === $authId);
-        @endphp
+
 
         @if($bisaUlasan)
             <div class="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
@@ -116,15 +111,34 @@
                         @csrf
 
                         <div>
-                            <label class="block text-sm text-stone-600 mb-2">Rating</label>
-                            <div class="flex gap-1">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <label class="cursor-pointer">
-                                        <input type="radio" name="rating" value="{{ $i }}" class="peer sr-only" {{ old('rating') == $i ? 'checked' : '' }} required>
-                                        <span class="text-3xl leading-none text-stone-300 peer-checked:text-amber-500">★</span>
-                                    </label>
-                                @endfor
-                            </div>
+<div x-data="{ rating: {{ old('rating', 5) }}, hover: 0 }">
+
+    <label class="block text-sm text-stone-600 mb-2">
+        Rating
+    </label>
+
+    <input type="hidden" name="rating" x-model="rating">
+<div class="flex gap-1">
+    <template x-for="n in 5" :key="n">
+        <button
+            type="button"
+            @click="rating = n"
+            @mouseenter="hover = n"
+            @mouseleave="hover = 0"
+            style="font-size:48px; line-height:1;"
+            :class="(hover ? hover : rating) >= n ? 'text-amber-500' : 'text-stone-300'">
+            ★
+        </button>
+    </template>
+</div>
+
+    <p class="mt-2 text-sm text-stone-500">
+        Rating:
+        <span class="font-semibold" x-text="rating"></span>/5
+    </p>
+
+    <x-input-error :messages="$errors->get('rating')" class="mt-1" />
+</div>
                             <x-input-error :messages="$errors->get('rating')" class="mt-1" />
                         </div>
 

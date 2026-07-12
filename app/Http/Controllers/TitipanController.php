@@ -57,12 +57,27 @@ class TitipanController extends Controller
     }
 
     public function show(Titipan $titipan)
-    {
-        Gate::authorize('lihat-titipan', $titipan);
-        $titipan->load(['items', 'pembeli', 'driver', 'ulasan']);
+{
+    $titipan->load(['items', 'pembeli', 'driver', 'ulasan']);
 
-        return view('titipan.show', compact('titipan'));
-    }
+    $authId = auth()->id();
+
+    $bisaUlasan = $titipan->status === 'selesai'
+        && (
+            $titipan->pembeli_id == $authId ||
+            $titipan->driver_id == $authId
+        );
+
+    $sudahUlasan = $titipan->ulasan()
+        ->where('dari_user_id', $authId)
+        ->first();
+
+    return view('titipan.show', compact(
+        'titipan',
+        'bisaUlasan',
+        'sudahUlasan'
+    ));
+}
 
     public function edit(Titipan $titipan)
     {
