@@ -56,8 +56,7 @@ class DriverController extends Controller
     /** Ambil order (assign driver_id ke titipan yang masih menunggu). */
     public function ambil(Titipan $titipan)
     {
-        abort_unless(Auth::user()->is_driver_active, 403, 'Aktifkan mode driver dulu.');
-
+        // Cek is_driver_active sudah ditangani middleware 'driver' di routes/web.php.
         if ($titipan->status !== 'menunggu' || $titipan->driver_id !== null) {
             return back()->with('error', 'Titipan sudah diambil driver lain.');
         }

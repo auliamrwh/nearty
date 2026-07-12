@@ -21,10 +21,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/titipan-terhapus', [TitipanController::class, 'trashed'])->name('titipan.trashed');
 
     // Mode Driver & Ulasan - dikerjakan oleh Regina
+    // Halaman /driver & tombol toggle bisa diakses siapa saja (untuk mengaktifkan mode driver).
+    // Aksi ambil order & update status hanya untuk user yang is_driver_active (middleware 'driver').
     Route::get('/driver', [DriverController::class, 'index'])->name('driver.index');
     Route::post('/driver/toggle', [DriverController::class, 'toggle'])->name('driver.toggle');
-    Route::post('/driver/{titipan}/ambil', [DriverController::class, 'ambil'])->name('driver.ambil');
-    Route::patch('/driver/{titipan}/status', [DriverController::class, 'updateStatus'])->name('driver.status');
+
+    Route::middleware('driver')->group(function () {
+        Route::post('/driver/{titipan}/ambil', [DriverController::class, 'ambil'])->name('driver.ambil');
+        Route::patch('/driver/{titipan}/status', [DriverController::class, 'updateStatus'])->name('driver.status');
+    });
 
     Route::get('/ulasan', [UlasanController::class, 'index'])->name('ulasan.index');
     Route::post('/titipan/{titipan}/ulasan', [UlasanController::class, 'store'])->name('ulasan.store');
