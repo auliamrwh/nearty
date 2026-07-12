@@ -92,6 +92,59 @@
             </ul>
         </div>
 
+        @php
+            $authId = auth()->id();
+            $sudahUlasan = $titipan->ulasan->firstWhere('dari_user_id', $authId);
+            $bisaUlasan = $titipan->status === 'selesai'
+                && ($titipan->pembeli_id === $authId || $titipan->driver_id === $authId);
+        @endphp
+
+        @if($bisaUlasan)
+            <div class="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
+                <h3 class="font-semibold text-stone-800 mb-3">Beri Ulasan</h3>
+
+                @if($sudahUlasan)
+                    <div class="flex items-center gap-2">
+                        <span class="text-amber-500 text-lg">{{ str_repeat('★', $sudahUlasan->rating) }}{{ str_repeat('☆', 5 - $sudahUlasan->rating) }}</span>
+                    </div>
+                    @if($sudahUlasan->komentar)
+                        <p class="text-sm text-stone-500 mt-1">"{{ $sudahUlasan->komentar }}"</p>
+                    @endif
+                    <p class="text-xs text-stone-400 mt-3">Kamu sudah memberi ulasan untuk titipan ini. Lihat semua ulasanmu di menu <a href="{{ route('ulasan.index') }}" class="underline">Ulasan</a>.</p>
+                @else
+                    <form method="POST" action="{{ route('ulasan.store', $titipan) }}" class="space-y-4">
+                        @csrf
+
+                        <div>
+                            <label class="block text-sm text-stone-600 mb-2">Rating</label>
+                            <div class="flex gap-1">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="rating" value="{{ $i }}" class="peer sr-only" {{ old('rating') == $i ? 'checked' : '' }} required>
+                                        <span class="text-3xl leading-none text-stone-300 peer-checked:text-amber-500">★</span>
+                                    </label>
+                                @endfor
+                            </div>
+                            <x-input-error :messages="$errors->get('rating')" class="mt-1" />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm text-stone-600 mb-1">Komentar (opsional)</label>
+                            <textarea name="komentar" rows="3" maxlength="255"
+                                      class="w-full rounded-xl border-stone-300 text-sm focus:border-amber-500 focus:ring-amber-500"
+                                      placeholder="Ceritakan pengalamanmu...">{{ old('komentar') }}</textarea>
+                            <x-input-error :messages="$errors->get('komentar')" class="mt-1" />
+                        </div>
+
+                        <button type="submit"
+                                class="inline-flex items-center px-4 py-2.5 rounded-xl bg-amber-500 text-[#241C19] font-semibold text-sm hover:bg-amber-400 transition">
+                            Kirim Ulasan
+                        </button>
+                    </form>
+                @endif
+            </div>
+        @endif
+
         <a href="{{ route('titipan.index') }}"
            class="text-sm text-stone-500 hover:underline">
             &larr; Kembali ke daftar titipan

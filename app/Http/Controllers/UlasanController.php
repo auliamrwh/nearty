@@ -17,7 +17,19 @@ class UlasanController extends Controller
         $diterima = $user->ulasanDiterima()->with(['dariUser', 'titipan'])->latest()->paginate(6, ['*'], 'diterima');
         $diberikan = $user->ulasanDiberikan()->with(['untukUser', 'titipan'])->latest()->paginate(6, ['*'], 'diberikan');
 
-        return view('ulasan.index', compact('diterima', 'diberikan'));
+        // Titipan selesai yang melibatkan user ini (sebagai pembeli/driver) tapi belum dia ulas.
+        $sudahDiulasIds = $user->ulasanDiberikan()->pluck('titipan_id');
+        $belumDiulas = Titipan::where('status', 'selesai')
+            ->where(function ($q) use ($user) {
+                $q->where('pembeli_id', $user->id)->orWhere('driver_id', $user->id);
+            })
+            ->whereNotIn('id', $sudahDiulasIds)
+            ->with(['pembeli', 'driver'])
+            ->latest()
+            ->limit(5)
+            ->get();
+
+        return view('ulasan.index', compact('diterima', 'diberikan', 'belumDiulas'));
     }
 
     /** Beri ulasan untuk titipan yang sudah selesai. */
