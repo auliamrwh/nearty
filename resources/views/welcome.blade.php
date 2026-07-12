@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nearty — Titip Beli Jajanan Lewat Driver Terdekat</title>
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="font-sans antialiased bg-[#241C19] text-stone-100 min-h-screen flex items-center justify-center px-6">
+    <div class="max-w-xl text-center">
+        <div class="w-16 h-16 rounded-2xl bg-amber-500 text-[#241C19] font-bold text-3xl flex items-center justify-center mx-auto mb-6">N</div>
+        <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3">Nearty</h1>
+        <p class="text-stone-300 mb-8">
+            Titip beli jajanan lewat driver terdekat, tanpa perlu keluar kost.
+            Nitip ke sesama pengguna yang lagi jadi driver — mereka belanja, kamu tinggal bayar QR atau COD.
+        </p>
+        <div class="flex items-center justify-center gap-3">
+            @auth
+                <a href="{{ route('dashboard') }}" class="px-6 py-3 rounded-xl bg-amber-500 text-[#241C19] font-semibold hover:bg-amber-400 transition">Buka Dashboard</a>
+            @else
+                <a href="{{ route('login') }}" class="px-6 py-3 rounded-xl bg-amber-500 text-[#241C19] font-semibold hover:bg-amber-400 transition">Masuk</a>
+                <a href="{{ route('register') }}" class="px-6 py-3 rounded-xl border border-stone-500 text-stone-200 font-semibold hover:bg-white/5 transition">Daftar</a>
+            @endauth
+        </div>
+    </div>
+</body>
+</html>
