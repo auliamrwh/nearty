@@ -1,18 +1,42 @@
 <x-app-layout>
     @php($title = 'Dashboard')
 
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <x-stat-card label="Titipan Saya" :value="$stats['total_titipan_saya']" accent="amber" />
-        <x-stat-card label="Saya Antar (Driver)" :value="$stats['total_diantar_saya']" accent="sky" />
-        <x-stat-card label="Tersedia Diambil" :value="$stats['titipan_tersedia']" accent="emerald" />
-        <x-stat-card label="Selesai" :value="$stats['titipan_selesai']" accent="rose" />
+    @if(isset($stats['admin']))
+        <div class="mb-6">
+            <h2 class="text-sm font-bold uppercase tracking-wide text-stone-400 mb-3">Dashboard Admin</h2>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <x-stat-card label="Total User" :value="$stats['admin']['total_user']" accent="amber" />
+                <x-stat-card label="Total Driver" :value="$stats['admin']['total_driver']" accent="sky" />
+                <x-stat-card label="Total Titipan" :value="$stats['admin']['total_titipan']" accent="emerald" />
+                <x-stat-card label="Ongkir Terkumpul" :value="'Rp '.number_format($stats['admin']['total_ongkir_terkumpul'], 0, ',', '.')" accent="rose" />
+            </div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+                <x-stat-card label="Titipan Menunggu" :value="$stats['admin']['titipan_menunggu']" accent="amber" />
+                <x-stat-card label="Titipan Diproses" :value="$stats['admin']['titipan_diproses']" accent="sky" />
+                <x-stat-card label="Titipan Selesai" :value="$stats['admin']['titipan_selesai']" accent="emerald" />
+                <x-stat-card label="Titipan Dibatalkan" :value="$stats['admin']['titipan_dibatalkan']" accent="rose" />
+            </div>
+        </div>
+    @endif
+
+    <div class="mb-6">
+        <h2 class="text-sm font-bold uppercase tracking-wide text-stone-400 mb-3">Dashboard Pembeli (Saya)</h2>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <x-stat-card label="Jumlah Titipan Saya" :value="$stats['pembeli']['jumlah_titipan_saya']" accent="amber" />
+            <x-stat-card label="Sedang Diproses" :value="$stats['pembeli']['sedang_diproses']" accent="sky" />
+            <x-stat-card label="Selesai" :value="$stats['pembeli']['selesai']" accent="emerald" />
+            <x-stat-card label="Dibatalkan" :value="$stats['pembeli']['dibatalkan']" accent="rose" />
+        </div>
     </div>
 
-    @if(isset($stats['total_user']))
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-            <x-stat-card label="Total User (Admin)" :value="$stats['total_user']" accent="amber" />
-            <x-stat-card label="Total Titipan (Admin)" :value="$stats['total_titipan']" accent="sky" />
-            <x-stat-card label="Ongkir Terkumpul (Admin)" :value="'Rp '.number_format($stats['total_ongkir_terkumpul'], 0, ',', '.')" accent="emerald" />
+    @if(isset($stats['driver']))
+        <div class="mb-6">
+            <h2 class="text-sm font-bold uppercase tracking-wide text-stone-400 mb-3">Dashboard Driver</h2>
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                <x-stat-card label="Titipan Tersedia" :value="$stats['driver']['titipan_tersedia']" accent="amber" />
+                <x-stat-card label="Sedang Saya Antar" :value="$stats['driver']['titipan_diambil']" accent="sky" />
+                <x-stat-card label="Riwayat Antar Selesai" :value="$stats['driver']['riwayat_count']" accent="emerald" />
+            </div>
         </div>
     @endif
 
