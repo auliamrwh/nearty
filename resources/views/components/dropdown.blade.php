@@ -19,12 +19,12 @@ $width = match ($width) {
     </div>
 
     <div x-show="open"
-            x-transition:enter="transition ease-out duration-200"
-            x-transition:enter-start="opacity-0 scale-95"
-            x-transition:enter-end="opacity-100 scale-100"
-            x-transition:leave="transition ease-in duration-75"
-            x-transition:leave-start="opacity-100 scale-100"
-            x-transition:leave-end="opacity-0 scale-95"
+            x-transition-all duration-300 ease-in-out hover:scale-105 active:scale-95:enter="transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 ease-out duration-200"
+            x-transition-all duration-300 ease-in-out hover:scale-105 active:scale-95:enter-start="opacity-0 scale-95"
+            x-transition-all duration-300 ease-in-out hover:scale-105 active:scale-95:enter-end="opacity-100 scale-100"
+            x-transition-all duration-300 ease-in-out hover:scale-105 active:scale-95:leave="transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 ease-in duration-75"
+            x-transition-all duration-300 ease-in-out hover:scale-105 active:scale-95:leave-start="opacity-100 scale-100"
+            x-transition-all duration-300 ease-in-out hover:scale-105 active:scale-95:leave-end="opacity-0 scale-95"
             class="absolute z-50 mt-2 {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }}"
             style="display: none;"
             @click="open = false">

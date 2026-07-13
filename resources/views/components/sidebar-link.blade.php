@@ -13,8 +13,8 @@ $icons = [
 $path = $icons[$icon] ?? $icons['home'];
 @endphp
 
-<a {{ $attributes->merge(['class' => 'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition '
-        . ($active ? 'bg-amber-500 text-[#241C19]' : 'text-stone-300 hover:bg-white/5 hover:text-white')]) }}>
+<a {{ $attributes->merge(['class' => 'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 '
+        . ($active ? 'bg-blue-500 text-[#0f172a]' : 'text-slate-300 hover:bg-white/5 hover:text-white')]) }}>
     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $path }}" />
     </svg>

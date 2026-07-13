@@ -12,15 +12,15 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-stone-800 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-stone-100">
+    <body class="font-sans text-slate-800 antialiased">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-slate-100">
             <a href="/" class="flex items-center gap-2 mb-2">
-                <div class="w-12 h-12 rounded-2xl bg-amber-500 text-[#241C19] font-bold text-xl flex items-center justify-center">N</div>
-                <span class="text-xl font-bold text-stone-800">Nearty</span>
+                <div class="w-12 h-12 rounded-2xl bg-blue-500 text-[#0f172a] font-bold text-xl flex items-center justify-center">N</div>
+                <span class="text-xl font-bold text-slate-800">Nearty</span>
             </a>
-            <p class="text-xs text-stone-400 mb-4">Titip aja, driver yang jemput jajanmu</p>
+            <p class="text-xs text-slate-400 mb-4">Titip aja, driver yang jemput jajanmu</p>
 
-            <div class="w-full sm:max-w-md mt-2 px-6 py-6 bg-white shadow-sm border border-stone-200 overflow-hidden sm:rounded-2xl">
+            <div class="w-full sm:max-w-md mt-2 px-6 py-6 bg-white shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-slate-200 overflow-hidden sm:rounded-2xl">
                 {{ $slot }}
             </div>
         </div>
