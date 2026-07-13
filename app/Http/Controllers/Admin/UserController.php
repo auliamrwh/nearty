@@ -26,6 +26,67 @@ class UserController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
+    public function create()
+    {
+        return view('admin.users.create');
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'email', 'max:255', 'unique:users,email'],
+            'phone'    => ['nullable', 'string', 'max:20'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role'     => ['required', Rule::in(['admin', 'user'])],
+        ]);
+
+        $user = User::create([
+            'name'              => $data['name'],
+            'email'             => $data['email'],
+            'phone'             => $data['phone'] ?? null,
+            'password'          => bcrypt($data['password']),
+            'is_driver_active'  => false,
+            'email_verified_at' => now(),
+        ]);
+
+        $user->assignRole($data['role']);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', "Akun {$user->name} berhasil dibuat.");
+    }
+
+    public function edit(User $user)
+    {
+        return view('admin.users.edit', compact('user'));
+    }
+
+    public function update(Request $request, User $user)
+    {
+        $data = $request->validate([
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
+            'phone'    => ['nullable', 'string', 'max:20'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'role'     => ['required', Rule::in(['admin', 'user'])],
+        ]);
+
+        $user->update([
+            'name'  => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'] ?? $user->phone,
+        ]);
+
+        if (!empty($data['password'])) {
+            $user->update(['password' => bcrypt($data['password'])]);
+        }
+
+        $user->syncRoles([$data['role']]);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', "Akun {$user->name} berhasil diperbarui.");
+    }
+
     public function updateRole(Request $request, User $user)
     {
         $request->validate([
