@@ -12,17 +12,17 @@
 
         <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     </head>
-    <body class="font-sans antialiased bg-stone-100 text-stone-800">
+    <body class="font-sans antialiased bg-slate-100 text-slate-800">
         <div x-data="{ sidebarOpen: false }" class="min-h-screen lg:flex">
 
             
             <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-                   class="fixed inset-y-0 left-0 z-40 w-64 bg-[#241C19] text-stone-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-auto flex flex-col">
+                   class="fixed inset-y-0 left-0 z-40 w-64 bg-[#0f172a] text-slate-200 transform transition-all duration-300 ease-in-out hover:scale-105 active:scale-95-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-auto flex flex-col">
                 <div class="h-16 flex items-center gap-2 px-6 border-b border-white/10">
-                    <div class="w-9 h-9 rounded-xl bg-amber-500 flex items-center justify-center font-bold text-[#241C19] text-lg">N</div>
+                    <div class="w-9 h-9 rounded-xl bg-blue-500 flex items-center justify-center font-bold text-[#0f172a] text-lg">N</div>
                     <div>
                         <p class="font-bold text-white leading-tight">Nearty</p>
-                        <p class="text-[11px] text-stone-400 leading-tight">Titip aja, driver jemput</p>
+                        <p class="text-[11px] text-slate-400 leading-tight">Titip aja, driver jemput</p>
                     </div>
                 </div>
 
@@ -106,7 +106,7 @@
 
                     <?php if(auth()->guard()->check()): ?>
                         <?php if(auth()->user()->isAdmin()): ?>
-                            <p class="px-3 pt-4 pb-1 text-[11px] uppercase tracking-wider text-stone-500">Admin</p>
+                            <p class="px-3 pt-4 pb-1 text-[11px] uppercase tracking-wider text-slate-500">Admin</p>
                             <?php if (isset($component)) { $__componentOriginal3d3185cbc95d2b4d3b41182ae7d7a300 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal3d3185cbc95d2b4d3b41182ae7d7a300 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.sidebar-link','data' => ['href' => route('admin.users.index'),'active' => request()->routeIs('admin.users.*'),'icon' => 'users']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -117,6 +117,25 @@
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['href' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.users.index')),'active' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(request()->routeIs('admin.users.*')),'icon' => 'users']); ?>Kelola User <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal3d3185cbc95d2b4d3b41182ae7d7a300)): ?>
+<?php $attributes = $__attributesOriginal3d3185cbc95d2b4d3b41182ae7d7a300; ?>
+<?php unset($__attributesOriginal3d3185cbc95d2b4d3b41182ae7d7a300); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal3d3185cbc95d2b4d3b41182ae7d7a300)): ?>
+<?php $component = $__componentOriginal3d3185cbc95d2b4d3b41182ae7d7a300; ?>
+<?php unset($__componentOriginal3d3185cbc95d2b4d3b41182ae7d7a300); ?>
+<?php endif; ?>
+                            <?php if (isset($component)) { $__componentOriginal3d3185cbc95d2b4d3b41182ae7d7a300 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal3d3185cbc95d2b4d3b41182ae7d7a300 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.sidebar-link','data' => ['href' => route('admin.ulasan.index'),'active' => request()->routeIs('admin.ulasan.*'),'icon' => 'star']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('sidebar-link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['href' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.ulasan.index')),'active' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(request()->routeIs('admin.ulasan.*')),'icon' => 'star']); ?>Moderasi Ulasan <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal3d3185cbc95d2b4d3b41182ae7d7a300)): ?>
 <?php $attributes = $__attributesOriginal3d3185cbc95d2b4d3b41182ae7d7a300; ?>
@@ -171,7 +190,7 @@
 <?php endif; ?>
                     <form method="POST" action="<?php echo e(route('logout')); ?>">
                         <?php echo csrf_field(); ?>
-                        <button type="submit" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-stone-300 hover:bg-white/5 hover:text-white transition">
+                        <button type="submit" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-white/5 hover:text-white transition-all duration-300 ease-in-out hover:scale-105 active:scale-95">
                             <span>&#8630;</span> Log Out
                         </button>
                     </form>
@@ -182,32 +201,32 @@
 
             
             <div class="flex-1 flex flex-col min-w-0">
-                <header class="h-16 bg-white border-b border-stone-200 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-20">
+                <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-20">
                     <div class="flex items-center gap-3">
-                        <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden text-stone-500">
+                        <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden text-slate-500">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
                         </button>
                         <div>
-                            <h1 class="text-lg font-bold text-stone-800"><?php echo e($title ?? 'Dashboard'); ?></h1>
-                            <?php if(isset($subtitle)): ?><p class="text-xs text-stone-500"><?php echo e($subtitle); ?></p><?php endif; ?>
+                            <h1 class="text-lg font-bold text-slate-800"><?php echo e($title ?? 'Dashboard'); ?></h1>
+                            <?php if(isset($subtitle)): ?><p class="text-xs text-slate-500"><?php echo e($subtitle); ?></p><?php endif; ?>
                         </div>
                     </div>
 
                     <?php if(auth()->guard()->check()): ?>
                     <div x-data="{ open: false }" class="relative">
-                        <button @click="open = !open" class="flex items-center gap-2 text-sm font-medium text-stone-700">
-                            <span class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-semibold">
+                        <button @click="open = !open" class="flex items-center gap-2 text-sm font-medium text-slate-700">
+                            <span class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-semibold">
                                 <?php echo e(strtoupper(substr(auth()->user()->name, 0, 1))); ?>
 
                             </span>
                             <span class="hidden sm:inline"><?php echo e(auth()->user()->name); ?></span>
                         </button>
                         <div x-show="open" @click.outside="open = false" x-cloak
-                             class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-stone-100 py-1 text-sm">
-                            <a href="<?php echo e(route('profile.edit')); ?>" class="block px-4 py-2 hover:bg-stone-50">Profil Saya</a>
+                             class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1 text-sm">
+                            <a href="<?php echo e(route('profile.edit')); ?>" class="block px-4 py-2 hover:bg-blue-50 transition-colors duration-200">Profil Saya</a>
                             <form method="POST" action="<?php echo e(route('logout')); ?>">
                                 <?php echo csrf_field(); ?>
-                                <button class="w-full text-left px-4 py-2 hover:bg-stone-50">Log Out</button>
+                                <button class="w-full text-left px-4 py-2 hover:bg-blue-50 transition-colors duration-200">Log Out</button>
                             </form>
                         </div>
                     </div>

@@ -10,14 +10,15 @@
 <?php $component->withAttributes([]); ?>
     <?php ($title = 'Buat Titipan Baru'); ?>
 
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
     <div class="max-w-3xl">
         <form method="POST" action="<?php echo e(route('titipan.store')); ?>" x-data="titipanForm()" class="space-y-6">
             <?php echo csrf_field(); ?>
 
             <div class="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm space-y-4">
                 <h2 class="font-semibold text-stone-800">Lokasi & Pembayaran</h2>
-
-
 
                 <div>
                     <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
@@ -82,7 +83,36 @@
 <?php endif; ?>
                 </div>
 
-
+                
+                <div>
+                    <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['value' => 'Pin Lokasi Warung di Peta']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input-label'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['value' => 'Pin Lokasi Warung di Peta']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
+<?php $attributes = $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581; ?>
+<?php unset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
+<?php $component = $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581; ?>
+<?php unset($__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581); ?>
+<?php endif; ?>
+                    <p class="text-xs text-stone-400 mb-2">Klik peta untuk menandai lokasi warung. Ini digunakan driver untuk menghitung jarak.</p>
+                    <div id="map-picker" class="w-full rounded-xl border border-stone-300 overflow-hidden" style="height: 260px;"></div>
+                    <div id="map-info" class="hidden mt-2 text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                        📍 Lokasi ditandai — koordinat tersimpan.
+                    </div>
+                    <input type="hidden" name="latitude"  id="input-lat"  value="<?php echo e(old('latitude')); ?>">
+                    <input type="hidden" name="longitude" id="input-lng"  value="<?php echo e(old('longitude')); ?>">
+                </div>
 
                 <div>
                     <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
@@ -303,6 +333,9 @@
         </form>
     </div>
 
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <script>
         function titipanForm() {
             return {
@@ -315,6 +348,47 @@
                 }
             }
         }
+
+        // Initialize Leaflet map
+        document.addEventListener('DOMContentLoaded', function () {
+            const defaultLat = <?php echo e(old('latitude', -6.2088)); ?>;
+            const defaultLng = <?php echo e(old('longitude', 106.8456)); ?>;
+
+            const map = L.map('map-picker').setView([defaultLat, defaultLng], 15);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            let marker = null;
+
+            // Restore marker if old value exists (after validation error)
+            <?php if(old('latitude') && old('longitude')): ?>
+                marker = L.marker([<?php echo e(old('latitude')); ?>, <?php echo e(old('longitude')); ?>]).addTo(map);
+                document.getElementById('map-info').classList.remove('hidden');
+            <?php endif; ?>
+
+            // Try to center on user's current location
+            if (navigator.geolocation && !<?php echo e(old('latitude') ? 'true' : 'false'); ?>) {
+                navigator.geolocation.getCurrentPosition(function (pos) {
+                    map.setView([pos.coords.latitude, pos.coords.longitude], 16);
+                });
+            }
+
+            map.on('click', function (e) {
+                const { lat, lng } = e.latlng;
+
+                if (marker) {
+                    marker.setLatLng([lat, lng]);
+                } else {
+                    marker = L.marker([lat, lng]).addTo(map);
+                }
+
+                document.getElementById('input-lat').value = lat.toFixed(7);
+                document.getElementById('input-lng').value = lng.toFixed(7);
+                document.getElementById('map-info').classList.remove('hidden');
+            });
+        });
     </script>
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
@@ -326,4 +400,5 @@
 <?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
 <?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
 <?php endif; ?>
+
 <?php /**PATH C:\xampp\htdocs\nearty\resources\views/titipan/create.blade.php ENDPATH**/ ?>

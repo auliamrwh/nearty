@@ -25,6 +25,9 @@ class StoreTitipanRequest extends FormRequest
             'items.*.jumlah' => ['required', 'integer', 'min:1'],
             'items.*.estimasi_harga' => ['nullable', 'numeric', 'min:0'],
             'items.*.catatan' => ['nullable', 'string', 'max:255'],
+
+            'latitude'  => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
         ];
     }
 

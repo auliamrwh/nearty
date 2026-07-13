@@ -1,109 +1,134 @@
-# Nearty - Titip Beli Jajanan Lewat Driver Terdekat
+# Nearty — Titip Beli Jajanan Lewat Driver Terdekat
 
-Aplikasi dashboard berbasis Laravel 13 untuk **titip beli jajanan lewat sesama pengguna yang lagi jadi driver dadakan** — anak kost nggak perlu keluar buat jajan hal kecil (es teh, baso ikan, kentang goreng), dan ojek online kurang cocok untuk jarak sedekat & order sekecil itu.
-
-Satu akun bisa berperan sebagai **pembeli** maupun **driver**, tergantung status per transaksi (`pembeli_id` / `driver_id`) — bukan lewat role tetap.
+Aplikasi web berbasis Laravel 13 untuk **titip beli jajanan lewat sesama pengguna yang lagi jadi driver dadakan**. Anak kost nggak perlu keluar buat jajan hal kecil (es teh, baso ikan, kentang goreng) — cukup bikin titipan, driver terdekat yang ambil. Satu akun bisa berperan sebagai **pembeli** maupun **driver** sekaligus.
 
 ## Fitur Utama
 
-- Autentikasi (Login, Register, Logout) dengan Laravel Breeze + validasi & proteksi CSRF
-- Role & Permission (Spatie): `admin` (kelola user & moderasi) dan `user` (pengguna aplikasi)
-- CRUD **Titipan**: buat, lihat, ubah, batalkan (soft delete + alasan pembatalan)
-- CRUD **Item Titipan**: daftar barang per titipan, kategori (makanan/minuman/lainnya)
-- CRUD **Ulasan**: rating 1-5 bintang + komentar antara pembeli & driver setelah titipan selesai
-- Mode Driver: toggle *available*, lihat titipan terdekat (dihitung pakai rumus Haversine), ambil order, update status (`diambil_driver` → `diantar` → `dibayar` → `selesai`)
-- Dashboard: statistik ringkas + grafik tren titipan 7 hari terakhir (Chart.js)
-- Search & pagination di semua tabel data
-- REST API (JSON) untuk resource **Titipan** dan **Ulasan**, autentikasi token via Laravel Sanctum
-- UI custom (Tailwind, sidebar branding Nearty) — bukan tampilan bawaan Breeze
+- **Autentikasi** — Login, Register, Logout via Laravel Breeze; validasi input & proteksi CSRF
+- **Role & Permission** — 2 role: `admin` (kelola user & moderasi) dan `user` (pengguna aplikasi), dikelola Spatie
+- **CRUD Titipan** — Buat, lihat, ubah, batalkan titipan (soft delete + alasan pembatalan)
+- **CRUD User (Admin)** — Tambah, edit, nonaktifkan, pulihkan akun user dari panel admin
+- **Moderasi Ulasan (Admin)** — Lihat semua ulasan, filter rating, hapus ulasan
+- **Mode Driver** — Toggle available, lihat titipan terdekat (Haversine), ambil order, update status pengantaran
+- **Ulasan** — Rating 1–5 bintang + komentar antara pembeli & driver setelah selesai
+- **Dashboard** — Statistik ringkas per role (admin/pembeli/driver) + grafik tren 7 hari (Chart.js)
+- **Search & Pagination** — Di semua tabel data (titipan, user, ulasan)
+- **REST API** — 2 resource API (Titipan & Ulasan) berbasis JSON, autentikasi token Sanctum
+- **UI Responsif** — Sidebar + mobile-friendly, Tailwind CSS + Alpine.js
 
 ## Tech Stack
 
-- Laravel 13 • PHP 8.3
-- MySQL 8
-- Blade + Laravel Breeze (autentikasi)
-- Tailwind CSS + Alpine.js (UI kustom)
-- Spatie Laravel Permission (role & permission)
-- Laravel Sanctum (REST API token)
-- Chart.js (grafik dashboard, via CDN)
+| Layer | Teknologi |
+|-------|-----------|
+| Backend | Laravel 13 • PHP 8.3 |
+| Database | MySQL 8 |
+| Auth | Laravel Breeze |
+| Frontend | Blade • Tailwind CSS • Alpine.js |
+| Role & Permission | Spatie Laravel Permission v6 |
+| API Auth | Laravel Sanctum |
+| Chart | Chart.js (via CDN) |
+| Version Control | GitHub |
 
 ## Instalasi
 
 ```bash
+# 1. Clone & masuk ke direktori
 git clone <url-repo-kelompok> nearty
 cd nearty
 
+# 2. Install dependencies
 composer install
 npm install
 
+# 3. Konfigurasi environment
 cp .env.example .env
 php artisan key:generate
 
-# atur DB_DATABASE, DB_USERNAME, DB_PASSWORD di .env sesuai MySQL lokal kamu
+# 4. Atur database di .env (DB_DATABASE, DB_USERNAME, DB_PASSWORD)
+
+# 5. Migrasi & seed data demo
 php artisan migrate --seed
 
-npm run build   # atau: npm run dev (saat development)
+# 6. Build aset & jalankan server
+npm run build         # atau: npm run dev (mode development)
 php artisan serve
 ```
 
-Buka `http://127.0.0.1:8000`.
+Buka `http://127.0.0.1:8000`
 
-## 👥 Akun Default (hasil seeder)
+## 👤 Akun Default (hasil seeder)
 
 | Email | Password | Role | Catatan |
-|---|---|---|---|
-| admin@nearty.test | password | admin | Kelola user & lihat semua titipan |
+|-------|----------|------|---------|
+| admin@nearty.test | password | admin | Kelola user, moderasi ulasan, lihat semua titipan |
 | pembeli@example.com | password | user | Sudah punya riwayat titipan (menunggu, selesai, dibatalkan) |
-| driver@example.com | password | user | `is_driver_active = true`, sedang mengantar 1 titipan |
-| regina@example.com | password | user | Contoh akun tambahan |
+| driver@example.com | password | user | `is_driver_active = true`, bisa langsung ambil order |
+| regina@example.com | password | user | Akun tambahan untuk demo multi-user |
 
 ## REST API
 
-Autentikasi memakai token Sanctum. Ambil token lewat:
+Autentikasi memakai token Sanctum. Ambil token via:
 
 ```
 POST /api/login
 Body: { "email": "pembeli@example.com", "password": "password" }
-Response: { "user": {...}, "token": "..." }
+Response: { "user": {...}, "token": "1|abc..." }
 ```
 
-Kirim token di header setiap request berikutnya: `Authorization: Bearer <token>`
+Kirim token di header: `Authorization: Bearer <token>`
 
 ### Resource 1 — Titipan
 
 | Method | Endpoint | Keterangan |
-|---|---|---|
-| GET | `/api/titipans` | List titipan (support `?q=`, `?status=`, pagination) |
-| GET | `/api/titipans/{id}` | Detail titipan + item |
+|--------|----------|------------|
+| GET | `/api/titipans` | List titipan (`?q=`, `?status=`, pagination) |
+| GET | `/api/titipans/{id}` | Detail titipan beserta items |
 | POST | `/api/titipans` | Buat titipan baru (+ array `items`) |
 | PATCH | `/api/titipans/{id}` | Update status / total aktual |
-| DELETE | `/api/titipans/{id}` | Batalkan (soft delete) |
+| DELETE | `/api/titipans/{id}` | Batalkan titipan (soft delete) |
 
 ### Resource 2 — Ulasan
 
 | Method | Endpoint | Keterangan |
-|---|---|---|
+|--------|----------|------------|
 | GET | `/api/ulasans` | List ulasan yang diterima user login |
 | GET | `/api/ulasans/{id}` | Detail ulasan |
-| POST | `/api/titipans/{id}/ulasans` | Beri ulasan untuk titipan yang sudah selesai |
-| DELETE | `/api/ulasans/{id}` | Hapus ulasan (soft delete) |
+| POST | `/api/titipans/{id}/ulasans` | Beri ulasan untuk titipan selesai |
+| DELETE | `/api/ulasans/{id}` | Hapus ulasan |
 
-Lainnya: `POST /api/logout`, `GET /api/me`.
-
-## Struktur Database (ERD)
-
-Lihat detail lengkap di [`PANDUAN_KOLABORASI.md`](PANDUAN_KOLABORASI.md) — termasuk diagram ERD, penjelasan soft delete, dan pembagian tugas tim.
+Endpoint lainnya: `POST /api/logout`, `GET /api/me`
 
 ## Screenshot
 
-_(Tempel screenshot dashboard, buat titipan, mode driver, dan admin di sini sebelum submit.)_
+> Tempel screenshot di bawah ini sebelum submit (dashboard, halaman buat titipan, mode driver, panel admin).
+
+| Halaman | Screenshot |
+|---------|------------|
+| Dashboard | _(tambahkan screenshot)_ |
+| Buat Titipan | _(tambahkan screenshot)_ |
+| Mode Driver | _(tambahkan screenshot)_ |
+| Panel Admin — Kelola User | _(tambahkan screenshot)_ |
+| Panel Admin — Moderasi Ulasan | _(tambahkan screenshot)_ |
 
 ## Bug yang Diketahui
 
 _(Isi jujur di sini kalau ada bug saat demo — kejujuran dinilai positif oleh dosen.)_
 
+- Jarak titipan baru muncul setelah browser mengizinkan akses GPS; tanpa GPS, jarak tidak tampil.
+- Pin peta di form buat titipan menggunakan OpenStreetMap (membutuhkan koneksi internet).
+
+## Lesson Learned
+
+_(Isi setelah proyek selesai — 1-2 halaman tentang tantangan, solusi, dan pelajaran dari proyek ini.)_
+
 ## Tim
 
-- **Aulia** — Setup project, Dashboard, Role & Permission, Git repository owner
-- **Hawa** — Modul Titipan (CRUD pembeli)
-- **Regina** — Mode Driver, Ulasan, REST API
+| Nama | NIM | Kontribusi Utama |
+|------|-----|-----------------|
+| Aulia | _(isi NIM)_ | Setup project, Dashboard, Role & Permission, Admin panel |
+| Hawa | _(isi NIM)_ | Modul Titipan (CRUD pembeli), Git |
+| Regina | _(isi NIM)_ | Mode Driver, Ulasan, REST API |
+
+---
+
+Untuk panduan kolaborasi tim dan diagram ERD, lihat [`PANDUAN_KOLABORASI.md`](PANDUAN_KOLABORASI.md).

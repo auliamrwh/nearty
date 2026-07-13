@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tugas Besar - Pemrograman Web Berbasis Framework</title>
+  <meta name="description" content="Spesifikasi lengkap tugas besar pemrograman web berbasis framework: Laravel 13, MySQL, Blade + Breeze, Spatie Permission." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg-deep:#060d1f;--bg-glass:rgba(13,27,54,0.7);
+      --blue-800:#0f2354;--blue-700:#1340a0;--blue-600:#1a52c9;
+      --blue-400:#3b82f6;--blue-300:#60a5fa;
+      --amber:#f59e0b;--amber-l:#fbbf24;
+      --text-head:#e2eaff;--text-body:#94a3b8;--text-muted:#4e6080;
+      --border:rgba(59,130,246,.18);
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:Inter,sans-serif;background:var(--bg-deep);color:var(--text-body);min-height:100vh;overflow-x:hidden}
+    body::before{content:"";position:fixed;inset:0;z-index:0;
+      background-image:linear-gradient(rgba(37,99,235,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,.05) 1px,transparent 1px);
+      background-size:48px 48px;pointer-events:none}
+    .orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;animation:drift 18s ease-in-out infinite alternate}
+    .orb-1{width:500px;height:500px;background:radial-gradient(circle,rgba(37,99,235,.18),transparent 70%);top:-120px;left:-100px}
+    .orb-2{width:400px;height:400px;background:radial-gradient(circle,rgba(99,102,241,.14),transparent 70%);bottom:-80px;right:-60px;animation-delay:-9s}
+    .orb-3{width:300px;height:300px;background:radial-gradient(circle,rgba(245,158,11,.08),transparent 70%);top:50%;left:60%;animation-delay:-4s}
+    @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,40px) scale(1.08)}}
+    .wrapper{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 24px 120px}
+    .hero{text-align:center;padding:100px 20px 80px}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(37,99,235,.15);border:1px solid rgba(37,99,235,.3);color:var(--blue-300);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:6px 16px;border-radius:100px;margin-bottom:28px;animation:fadeUp .6s ease both}
+    .hero-badge .dot{width:7px;height:7px;background:var(--blue-400);border-radius:50%;animation:pulse 1.4s ease infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    .hero h1{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;color:var(--text-head);line-height:1.15;letter-spacing:-.02em;animation:fadeUp .6s .1s ease both}
+    .hero h1 span{background:linear-gradient(135deg,var(--blue-400),#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .hero p{margin:20px auto 0;max-width:640px;font-size:1.05rem;line-height:1.7;animation:fadeUp .6s .2s ease both}
+    .hero-dots{display:flex;justify-content:center;gap:10px;margin-top:36px;animation:fadeUp .6s .3s ease both}
+    .hero-dots span{width:12px;height:12px;border-radius:50%}
+    .d1{background:var(--blue-400)}.d2{background:var(--amber)}.d3{background:#818cf8}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    .nav-tabs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;position:sticky;top:16px;z-index:50;background:rgba(6,13,31,.85);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:16px;padding:8px;margin-bottom:60px}
+    .nav-tab{padding:8px 20px;border-radius:10px;border:none;cursor:pointer;font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:var(--text-body);background:transparent;transition:all .25s;white-space:nowrap}
+    .nav-tab:hover{color:var(--text-head);background:rgba(37,99,235,.1)}
+    .nav-tab.active{background:var(--blue-600);color:#fff;box-shadow:0 4px 16px rgba(37,99,235,.4)}
+    .section{margin-bottom:80px}.section-head{display:flex;align-items:center;gap:16px;margin-bottom:36px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+    .section-head-icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:20px;flex-shrink:0}
+    .section-head h2{font-size:1.6rem;font-weight:800;color:var(--text-head)}
+    .section-head p{font-size:.875rem;color:var(--text-muted);margin-top:2px}
+    .section-badge{margin-left:auto;padding:5px 14px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+    .tech-list{display:flex;flex-direction:column;gap:12px}
+    .tech-item{background:rgba(13,27,54,.8);border:1px solid var(--border);border-radius:14px;padding:18px 22px;display:flex;align-items:center;gap:18px;transition:border-color .3s,transform .3s,box-shadow .3s}
+    .tech-item:hover{border-color:rgba(37,99,235,.5);transform:translateX(6px);box-shadow:-4px 0 0 var(--blue-600),0 8px 30px rgba(0,0,0,.3)}
+    .tech-icon{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:22px;flex-shrink:0}
+    .tech-name{font-size:1rem;font-weight:700;color:var(--text-head)}.tech-desc{font-size:.82rem;line-height:1.5;margin-top:2px}
+    .fitur-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+    .fitur-card{background:var(--bg-glass);border:1px solid var(--border);border-radius:18px;padding:24px;backdrop-filter:blur(16px);display:flex;align-items:flex-start;gap:18px;transition:border-color .3s,transform .3s;position:relative;overflow:hidden}
+    .fitur-card::after{content:"";position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue-600),var(--blue-400));transform:scaleX(0);transform-origin:left;transition:transform .3s}
+    .fitur-card:hover{border-color:rgba(37,99,235,.4);transform:translateY(-3px)}.fitur-card:hover::after{transform:scaleX(1)}
+    .fitur-icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:22px;flex-shrink:0}
+    .fitur-title{font-size:.95rem;font-weight:700;color:var(--text-head);margin-bottom:6px}.fitur-desc{font-size:.82rem;line-height:1.6}
+    .ketentuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+    .ketentuan-box{background:var(--bg-glass);border:1px solid var(--border);border-radius:20px;padding:28px;backdrop-filter:blur(16px)}
+    .ketentuan-box h3{font-size:1.1rem;font-weight:800;color:var(--text-head);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+    .ketentuan-item{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px}.ketentuan-item:last-child{margin-bottom:0}
+    .check-icon{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:13px;flex-shrink:0;margin-top:1px}
+    .kitem-title{font-size:.88rem;font-weight:700;color:var(--text-head);margin-bottom:3px}.kitem-desc{font-size:.8rem;line-height:1.55}
+    .deliverable-list{display:flex;flex-direction:column;gap:14px}
+    .deliverable-item{background:var(--bg-glass);border:1px solid var(--border);border-radius:16px;padding:22px 26px;backdrop-filter:blur(16px);display:flex;align-items:flex-start;gap:20px;transition:border-color .3s,transform .3s}
+    .deliverable-item:hover{border-color:rgba(37,99,235,.45);transform:translateX(8px)}
+    .deliverable-num{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--blue-700);color:var(--blue-300);font-size:18px;flex-shrink:0}
+    .deliverable-title{font-size:1rem;font-weight:700;color:var(--text-head);margin-bottom:5px}.deliverable-desc{font-size:.85rem;line-height:1.6}
+    .readme-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    @media(max-width:720px){.readme-grid{grid-template-columns:1fr}}
+    .code-block{background:#060d1f;border:1px solid rgba(37,99,235,.25);border-radius:16px;padding:24px;overflow:auto}
+    .code-block-header{display:flex;align-items:center;gap:8px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid rgba(37,99,235,.15)}
+    .dot-row{display:flex;gap:6px}.dot-row span{width:11px;height:11px;border-radius:50%}
+    .code-block-title{font-size:.75rem;color:var(--text-muted);font-family:"JetBrains Mono",monospace;margin-left:auto}
+    pre{font-family:"JetBrains Mono",monospace;font-size:.8rem;line-height:1.8;color:#7dd3fc;white-space:pre-wrap}
+    .kw{color:#818cf8}.str{color:#34d399}.cm{color:#4e6080}.hl{color:#f59e0b}
+    .readme-points{display:flex;flex-direction:column;gap:10px}
+    .readme-point{background:var(--bg-glass);border:1px solid var(--border);border-radius:12px;padding:16px 18px;backdrop-filter:blur(12px);transition:border-color .3s}
+    .readme-point:hover{border-color:rgba(37,99,235,.4)}
+    .readme-point-title{font-size:.88rem;font-weight:700;color:var(--text-head);margin-bottom:4px}.readme-point-desc{font-size:.8rem;line-height:1.55}
+    .bg-blue{background:rgba(37,99,235,.18)}.bg-purple{background:rgba(129,140,248,.18)}
+    .bg-amber{background:rgba(245,158,11,.18)}.bg-green{background:rgba(52,211,153,.18)}
+    .bg-rose{background:rgba(244,63,94,.18)}.bg-cyan{background:rgba(34,211,238,.18)}
+    .cl-blue{color:var(--blue-300)}.cl-purple{color:#a5b4fc}.cl-amber{color:var(--amber-l)}
+    .cl-green{color:#6ee7b7}.cl-rose{color:#fda4af}.cl-cyan{color:#67e8f9}
+    .progress-wrap{margin-top:10px;min-width:90px}
+    .progress-bar-bg{background:rgba(37,99,235,.12);border-radius:100px;height:6px;overflow:hidden}
+    .progress-bar{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--blue-600),var(--blue-300));animation:grow 1.6s .5s ease both}
+    @keyframes grow{from{width:0}}
+    .cta{text-align:center;padding:70px 20px;position:relative;background:var(--bg-glass);border:1px solid var(--border);border-radius:24px;backdrop-filter:blur(20px);margin-top:40px;overflow:hidden}
+    .cta::before{content:"";position:absolute;inset:0;border-radius:24px;background:radial-gradient(ellipse at 50% 0,rgba(37,99,235,.2),transparent 70%);pointer-events:none}
+    .cta h2{font-size:2rem;font-weight:800;color:var(--text-head);margin-bottom:14px}
+    .cta p{max-width:520px;margin:0 auto 30px;font-size:.95rem;line-height:1.65}
+    .btn-primary{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--blue-600),#4f46e5);color:#fff;font-weight:700;font-size:.95rem;padding:14px 32px;border-radius:14px;border:none;cursor:pointer;text-decoration:none;transition:transform .25s,box-shadow .25s;box-shadow:0 8px 30px rgba(37,99,235,.4)}
+    .btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(37,99,235,.55)}
+    .reveal{opacity:0;transform:translateY(30px);transition:opacity .6s,transform .6s}.reveal.visible{opacity:1;transform:translateY(0)}
+    ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg-deep)}
+    ::-webkit-scrollbar-thumb{background:var(--blue-800);border-radius:10px}::-webkit-scrollbar-thumb:hover{background:var(--blue-600)}
+    @media(max-width:600px){.hero{padding:70px 10px 50px}.nav-tabs{top:8px}.nav-tab{padding:7px 12px;font-size:12px}}
+  </style>
+</head>
+<body>
+<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+<div class="wrapper">
+  <section class="hero">
+    <div class="hero-badge"><span class="dot"></span>&nbsp;Tugas Besar 2025/2026</div>
+    <h1>Pemrograman Web<br><span>Berbasis Framework</span></h1>
+    <p>Panduan lengkap spesifikasi teknis, fitur wajib, ketentuan kelompok, dan deliverables yang harus dipenuhi dalam proyek akhir.</p>
+    <div class="hero-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+  </section>
+
+  <nav class="nav-tabs" id="mainNav">
+    <button class="nav-tab active" data-target="spesifikasi" onclick="goTo(this)">&#x1F6E0; Spesifikasi Teknis</button>
+    <button class="nav-tab" data-target="fitur" onclick="goTo(this)">&#x2705; Fitur Wajib</button>
+    <button class="nav-tab" data-target="ketentuan" onclick="goTo(this)">&#x1F465; Ketentuan &amp; Demo</button>
+    <button class="nav-tab" data-target="deliverables" onclick="goTo(this)">&#x1F4E6; Deliverables</button>
+    <button class="nav-tab" data-target="readme" onclick="goTo(this)">&#x1F4DD; Format README</button>
+  </nav>
+
+  <!-- SPESIFIKASI -->
+  <section class="section reveal" id="spesifikasi">
+    <div class="section-head">
+      <div class="section-head-icon bg-blue">&#x1F6E0;</div>
+      <div><h2>Spesifikasi Teknis</h2><p>Stack teknologi yang wajib digunakan dalam proyek</p></div>
+    </div>
+    <div class="tech-list">
+      <div class="tech-item">
+        <div class="tech-icon bg-blue cl-blue">&#x26A1;</div>
+        <div class="flex-1"><div class="tech-name">Laravel 13</div><div class="tech-desc">Framework PHP terbaru dengan fitur modern: Livewire, Vite, typed route binding. Standar industri tahun 2025.</div></div>
+        <div class="progress-wrap"><div class="progress-bar-bg"><div class="progress-bar" style="width:95%"></div></div><small style="color:var(--text-muted);font-size:.7rem">v13.x</small></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon bg-cyan cl-cyan">&#x1F5C4;</div>
+        <div class="flex-1"><div class="tech-name">MySQL</div><div class="tech-desc">RDBMS relasional yang andal. Wajib menggunakan migration dan seeder agar struktur database reproducible.</div></div>
+        <div class="progress-wrap"><div class="progress-bar-bg"><div class="progress-bar" style="width:88%;background:linear-gradient(90deg,#0ea5e9,#67e8f9)"></div></div><small style="color:var(--text-muted);font-size:.7rem">MySQL 8+</small></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon bg-purple cl-purple" style="font-size:14px;font-weight:800">&lt;/&gt;</div>
+        <div class="flex-1"><div class="tech-name">Blade + Breeze</div><div class="tech-desc">Template engine bawaan Laravel dikombinasikan Breeze untuk scaffold autentikasi siap pakai (login, register, forgot password).</div></div>
+        <div class="progress-wrap"><div class="progress-bar-bg"><div class="progress-bar" style="width:90%;background:linear-gradient(90deg,#6366f1,#a5b4fc)"></div></div><small style="color:var(--text-muted);font-size:.7rem">Breeze 2.x</small></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon bg-green cl-green">&#x1F6E1;</div>
+        <div class="flex-1"><div class="tech-name">Spatie Permission</div><div class="tech-desc">Package terpopuler untuk manajemen Role &amp; Permission di Laravel. Memisahkan akses admin dan user secara granular.</div></div>
+        <div class="progress-wrap"><div class="progress-bar-bg"><div class="progress-bar" style="width:85%;background:linear-gradient(90deg,#059669,#6ee7b7)"></div></div><small style="color:var(--text-muted);font-size:.7rem">v6.x</small></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon" style="background:rgba(36,41,47,.5);color:#e8eaea">&#x1F4BB;</div>
+        <div class="flex-1"><div class="tech-name">GitHub</div><div class="tech-desc">Version control wajib. Setiap anggota kelompok harus berkontribusi lewat commit personal — bukan satu commit besar di akhir.</div></div>
+        <div class="progress-wrap"><div class="progress-bar-bg"><div class="progress-bar" style="width:100%;background:linear-gradient(90deg,#374151,#9ca3af)"></div></div><small style="color:var(--text-muted);font-size:.7rem">Wajib</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FITUR WAJIB -->
+  <section class="section reveal" id="fitur">
+    <div class="section-head">
+      <div class="section-head-icon bg-green">&#x2705;</div>
+      <div><h2>Fitur Wajib</h2><p>Semua fitur di bawah ini harus ada dalam proyek</p></div>
+      <div class="section-badge" style="background:rgba(245,158,11,.18);color:#fbbf24;border:1px solid rgba(245,158,11,.3)">SEMUA HARUS ADA</div>
+    </div>
+    <div class="fitur-grid">
+      <div class="fitur-card"><div class="fitur-icon bg-cyan cl-cyan">&#x1F5C3;</div><div><div class="fitur-title">Migration &amp; Seeder</div><div class="fitur-desc">Struktur tabel harus dibuat via migration, bukan manual. Seeder wajib ada agar demo bisa dijalankan dari database kosong.</div></div></div>
+      <div class="fitur-card"><div class="fitur-icon bg-blue cl-blue">&#x1F511;</div><div><div class="fitur-title">Autentikasi</div><div class="fitur-desc">Login, Register, Logout. Gunakan Laravel Breeze. Tambahkan validasi input dan proteksi CSRF.</div></div></div>
+      <div class="fitur-card"><div class="fitur-icon bg-green cl-green">&#x1F6E1;</div><div><div class="fitur-title">Role &amp; Permission</div><div class="fitur-desc">Minimal 2 role: Admin dan User/Staff. Akses halaman dibatasi sesuai role menggunakan middleware Spatie.</div></div></div>
+      <div class="fitur-card"><div class="fitur-icon bg-purple cl-purple">&#x1F4CB;</div><div><div class="fitur-title">3 Halaman CRUD</div><div class="fitur-desc">Minimal tiga entitas dengan fitur Create, Read (list), Update, Delete lengkap beserta konfirmasi hapus.</div></div></div>
+      <div class="fitur-card"><div class="fitur-icon bg-amber cl-amber">&#x1F4CA;</div><div><div class="fitur-title">Dashboard</div><div class="fitur-desc">Tampilkan statistik ringkas (jumlah data), grafik tren, ringkasan terbaru, dll. Query harus efisien.</div></div></div>
+      <div class="fitur-card"><div class="fitur-icon bg-blue cl-blue">&#x1F50D;</div><div><div class="fitur-title">Search &amp; Pagination</div><div class="fitur-desc">Tabel data harus dapat dicari (search) dan dipaginasi. Tidak boleh menampilkan semua data sekaligus.</div></div></div>
+      <div class="fitur-card"><div class="fitur-icon bg-cyan cl-cyan">&#x1F4F1;</div><div><div class="fitur-title">UI/UX Responsif</div><div class="fitur-desc">Tampilan harus nyaman di desktop dan mobile. Konsistensi komponen penting.</div></div></div>
+      <div class="fitur-card"><div class="fitur-icon bg-rose cl-rose">&#x1F50C;</div><div><div class="fitur-title">REST API</div><div class="fitur-desc">Minimal 2 resource API (JSON) dengan endpoint CRUD. Sertakan dokumentasi endpoint di README.</div></div></div>
+    </div>
+  </section>
+
+  <!-- KETENTUAN -->
+  <section class="section reveal" id="ketentuan">
+    <div class="section-head">
+      <div class="section-head-icon bg-purple">&#x1F465;</div>
+      <div><h2>Ketentuan Kelompok &amp; Demo</h2><p>Aturan yang harus dipatuhi tim dan saat presentasi demo</p></div>
+    </div>
+    <div class="ketentuan-grid">
+      <div class="ketentuan-box">
+        <h3><span>&#x1F464;</span> Ketentuan Kelompok</h3>
+        <div class="ketentuan-item"><div class="check-icon bg-blue cl-blue">&#x2713;</div><div><div class="kitem-title">Maksimal 4 Orang</div><div class="kitem-desc">Tidak diperbolehkan mengerjakan sendiri atau lebih dari 4 orang.</div></div></div>
+        <div class="ketentuan-item"><div class="check-icon bg-blue cl-blue">&#x2713;</div><div><div class="kitem-title">Kontribusi Terlihat</div><div class="kitem-desc">Riwayat commit GitHub harus mencerminkan kontribusi masing-masing anggota.</div></div></div>
+        <div class="ketentuan-item"><div class="check-icon bg-blue cl-blue">&#x2713;</div><div><div class="kitem-title">Tema Unik</div><div class="kitem-desc">Koordinasikan tema/domain proyek dengan kelas agar tidak ada yang duplikat.</div></div></div>
+        <div class="ketentuan-item"><div class="check-icon bg-amber cl-amber">!</div><div><div class="kitem-title">Bug = Jujur</div><div class="kitem-desc">Jika ada bug saat demo, dokumentasikan dengan jujur. Lebih baik mengakui kelemahan daripada menyembunyikannya.</div></div></div>
+      </div>
+      <div class="ketentuan-box">
+        <h3><span>&#x1F3AC;</span> Ketentuan Demo</h3>
+        <div class="ketentuan-item"><div class="check-icon bg-amber cl-amber">&#x23F1;</div><div><div class="kitem-title">Durasi 10&#8211;15 Menit</div><div class="kitem-desc">Setiap tim mendapatkan slot waktu 10&#8211;15 menit untuk presentasi dan demo langsung.</div></div></div>
+        <div class="ketentuan-item"><div class="check-icon bg-amber cl-amber">&#x1F331;</div><div><div class="kitem-title">Akun Demo Ter-seed</div><div class="kitem-desc">Siapkan akun admin dan user yang sudah ter-seed. JANGAN demo dengan database kosong.</div></div></div>
+        <div class="ketentuan-item"><div class="check-icon bg-amber cl-amber">&#x26A1;</div><div><div class="kitem-title">Fitur Harus Berjalan</div><div class="kitem-desc">Semua fitur yang diklaim harus bisa didemonstrasikan secara langsung di depan penguji.</div></div></div>
+        <div class="ketentuan-item"><div class="check-icon bg-amber cl-amber">&#x1F4DD;</div><div><div class="kitem-title">Dokumentasi Bug</div><div class="kitem-desc">Catat semua bug yang diketahui di README atau laporan. Keterbukaan dinilai positif.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DELIVERABLES -->
+  <section class="section reveal" id="deliverables">
+    <div class="section-head">
+      <div class="section-head-icon bg-amber">&#x1F4E6;</div>
+      <div><h2>Deliverables</h2><p>Apa saja yang harus dikumpulkan di akhir proyek?</p></div>
+    </div>
+    <div class="deliverable-list">
+      <div class="deliverable-item">
+        <div class="deliverable-num">&#x1F4BB;</div>
+        <div><div class="deliverable-title">GitHub Repository</div><div class="deliverable-desc">Repository public/private dengan history commit yang jelas. Branch terstruktur (main, develop, feature). File .gitignore lengkap.</div></div>
+        <div style="margin-left:auto;padding:4px 12px;border-radius:100px;background:rgba(37,99,235,.15);color:var(--blue-300);font-size:.75rem;font-weight:700;white-space:nowrap">Wajib</div>
+      </div>
+      <div class="deliverable-item">
+        <div class="deliverable-num" style="background:rgba(245,158,11,.18);color:var(--amber-l)">&#x1F4C4;</div>
+        <div><div class="deliverable-title">README.md Lengkap</div><div class="deliverable-desc">Dokumentasi instalasi, daftar fitur, tech stack, screenshot, akun default, dan nama tim. Format minimal sudah disediakan.</div></div>
+        <div style="margin-left:auto;padding:4px 12px;border-radius:100px;background:rgba(245,158,11,.15);color:var(--amber-l);font-size:.75rem;font-weight:700;white-space:nowrap">Wajib</div>
+      </div>
+      <div class="deliverable-item">
+        <div class="deliverable-num" style="background:rgba(244,63,94,.18);color:#fda4af">&#x1F3AC;</div>
+        <div><div class="deliverable-title">Video Teaser 3&#8211;5 Menit</div><div class="deliverable-desc">Rekaman demo yang menunjukkan semua fitur berjalan. Upload ke YouTube (unlisted) atau Google Drive, sertakan link di README.</div></div>
+        <div style="margin-left:auto;padding:4px 12px;border-radius:100px;background:rgba(244,63,94,.15);color:#fda4af;font-size:.75rem;font-weight:700;white-space:nowrap">Wajib</div>
+      </div>
+      <div class="deliverable-item">
+        <div class="deliverable-num" style="background:rgba(52,211,153,.18);color:#6ee7b7">&#x1F4DA;</div>
+        <div><div class="deliverable-title">Lesson Learned</div><div class="deliverable-desc">Laporan singkat (1&#8211;2 halaman) berisi tantangan yang dihadapi, solusi yang ditempuh, dan apa yang dipelajari dari proyek ini.</div></div>
+        <div style="margin-left:auto;padding:4px 12px;border-radius:100px;background:rgba(52,211,153,.15);color:#6ee7b7;font-size:.75rem;font-weight:700;white-space:nowrap">Wajib</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- README FORMAT -->
+  <section class="section reveal" id="readme">
+    <div class="section-head">
+      <div class="section-head-icon bg-purple">&#x1F4DD;</div>
+      <div><h2>Format README Minimal</h2><p>Markdown &#x2022; GitHub</p></div>
+      <div class="section-badge" style="background:rgba(129,140,248,.18);color:#a5b4fc;border:1px solid rgba(129,140,248,.3)">MARKDOWN &#x2022; GITHUB</div>
+    </div>
+    <div class="readme-grid">
+      <div class="code-block">
+        <div class="code-block-header">
+          <div class="dot-row"><span style="background:#ef4444"></span><span style="background:#f59e0b"></span><span style="background:#22c55e"></span></div>
+          <div class="code-block-title">README.md</div>
+        </div>
+        <pre><span class="hl"># [Nama Proyek] &#8212; Dashboard Admin</span>
+Aplikasi dashboard admin berbasis Laravel 13
+untuk mengelola [domain proyek kamu].
+
+<span class="hl">## Fitur Utama</span>
+<span class="str">- Autentikasi &amp; manajemen role-permission
+- Dashboard statistik + grafik interaktif
+- CRUD: [Entitas 1], [Entitas 2], [Entitas 3]
+- Search, sort, filter, pagination</span>
+
+<span class="hl">## Tech Stack</span>
+<span class="kw">Laravel 13</span> &#x2022; <span class="kw">PHP 8.3</span> &#x2022; <span class="kw">MySQL 8</span> &#x2022; Tailwind CSS
+
+<span class="hl">## Instalasi</span>
+<span class="cm">git clone ... &amp;&amp; cd repo
+composer install &amp;&amp; npm run build
+php artisan migrate --seed
+php artisan serve</span>
+
+<span class="hl">## &#x1F464; Akun Default</span>
+<span class="str">admin@example.com | password | admin
+staff@example.com | password | staff</span>
+
+<span class="hl">## Screenshot</span>
+![Dashboard](screenshots/dashboard.png)
+
+<span class="hl">## Tim</span>
+<span class="str">- Nama 1 &#8212; NIM
+- Nama 2 &#8212; NIM
+- Nama 3 &#8212; NIM</span></pre>
+      </div>
+      <div class="readme-points">
+        <div class="readme-point"><div class="readme-point-title">&#x1F4CC; Deskripsi Singkat</div><div class="readme-point-desc">Kalimat pembuka 1&#8211;2 baris tentang domain dan tujuan aplikasi.</div></div>
+        <div class="readme-point"><div class="readme-point-title">&#x26A1; Fitur Utama</div><div class="readme-point-desc">Bullet list semua fitur yang sudah berjalan. Jangan tambahkan yang belum ada.</div></div>
+        <div class="readme-point"><div class="readme-point-title">&#x1F6E0; Tech Stack</div><div class="readme-point-desc">Cantumkan versi spesifik: PHP 8.3, Laravel 13, MySQL 8, dsb.</div></div>
+        <div class="readme-point"><div class="readme-point-title">&#x1F4E6; Instalasi</div><div class="readme-point-desc">Langkah-langkah dari clone sampai server jalan. Wajib bisa diikuti orang lain.</div></div>
+        <div class="readme-point"><div class="readme-point-title">&#x1F464; Akun Default</div><div class="readme-point-desc">Tabel email, password, dan role. Wajib untuk keperluan testing dan demo.</div></div>
+        <div class="readme-point"><div class="readme-point-title">&#x1F5BC; Screenshot</div><div class="readme-point-desc">Gambar visual halaman utama (dashboard, CRUD, login).</div></div>
+        <div class="readme-point"><div class="readme-point-title">&#x1F50C; API Endpoint</div><div class="readme-point-desc">Dokumentasikan minimal 2 resource API dengan method dan contoh response JSON.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta reveal">
+    <h2>Siap Mulai? &#x1F680;</h2>
+    <p>Pastikan semua fitur wajib terpenuhi, commit history rapi, dan README lengkap sebelum deadline.</p>
+    <a href="https://github.com" target="_blank" class="btn-primary"><span>&#x1F4BB;</span> Buka GitHub Repository</a>
+  </div>
+</div>
+
+<script>
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('visible');
+      e.target.querySelectorAll('.tech-item,.fitur-card,.ketentuan-item,.deliverable-item,.readme-point')
+        .forEach((c, i) => {
+          c.style.opacity = '0'; c.style.transform = 'translateY(18px)';
+          setTimeout(() => { c.style.transition = 'opacity .5s,transform .5s'; c.style.opacity = '1'; c.style.transform = 'none'; }, 80 + i * 65);
+        });
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  function goTo(btn) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    const el = document.getElementById(btn.dataset.target);
+    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' });
+  }
+
+  const secs = document.querySelectorAll('.section');
+  const tabs = document.querySelectorAll('.nav-tab');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    secs.forEach(s => { if (window.scrollY >= s.offsetTop - 160) cur = s.id; });
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.target === cur));
+  }, { passive: true });
+</script>
+</body>
+</html>

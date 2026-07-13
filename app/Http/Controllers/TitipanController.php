@@ -39,12 +39,14 @@ class TitipanController extends Controller
 
         DB::transaction(function () use ($data) {
             $titipan = Titipan::create([
-                'pembeli_id' => Auth::id(),
-                'lokasi_warung' => $data['lokasi_warung'],
-                'alamat_antar' => $data['alamat_antar'],
-                'metode_bayar' => $data['metode_bayar'],
-                'ongkir' => $data['ongkir'],
-                'status' => 'menunggu',
+                'pembeli_id'     => Auth::id(),
+                'lokasi_warung'  => $data['lokasi_warung'],
+                'alamat_antar'   => $data['alamat_antar'],
+                'metode_bayar'   => $data['metode_bayar'],
+                'ongkir'         => $data['ongkir'],
+                'status'         => 'menunggu',
+                'latitude'       => $data['latitude'] ?? null,
+                'longitude'      => $data['longitude'] ?? null,
                 'estimasi_total' => collect($data['items'])->sum(fn ($i) => ($i['estimasi_harga'] ?? 0) * $i['jumlah']),
             ]);
 
