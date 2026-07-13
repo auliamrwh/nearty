@@ -32,24 +32,58 @@ class DashboardController extends Controller
             $stats['driver'] = $this->statsDriver($user);
         }
 
-        // Grafik tren titipan 7 hari terakhir untuk dashboard.
+        // Grafik tren dinamis per role
         $mulai = Carbon::now()->subDays(6)->startOfDay();
-        $tren = Titipan::select(
-                DB::raw('DATE(created_at) as tanggal'),
-                DB::raw('COUNT(*) as total')
-            )
-            ->where('created_at', '>=', $mulai)
-            ->groupBy('tanggal')
-            ->orderBy('tanggal')
-            ->get()
-            ->keyBy('tanggal');
-
         $labelChart = [];
-        $dataChart = [];
+        $dataChart = []; // Dataset 1
+        $dataChart2 = []; // Dataset 2 (khusus Admin)
+        $chartTitle = 'Tren Aktivitas 7 Hari Terakhir';
+        $chartLabel1 = 'Data';
+        $chartLabel2 = '';
+
         for ($i = 6; $i >= 0; $i--) {
-            $tanggal = Carbon::now()->subDays($i)->format('Y-m-d');
             $labelChart[] = Carbon::now()->subDays($i)->translatedFormat('d M');
-            $dataChart[] = (int) ($tren[$tanggal]->total ?? 0);
+        }
+
+        if ($user->isAdmin()) {
+            $chartTitle = 'Tren Titipan Dibuat vs Selesai';
+            $chartLabel1 = 'Titipan Dibuat';
+            $chartLabel2 = 'Titipan Selesai';
+
+            $dibuat = Titipan::select(DB::raw('DATE(created_at) as tgl'), DB::raw('COUNT(*) as total'))
+                ->where('created_at', '>=', $mulai)->groupBy('tgl')->pluck('total', 'tgl');
+            $selesai = Titipan::select(DB::raw('DATE(updated_at) as tgl'), DB::raw('COUNT(*) as total'))
+                ->where('status', 'selesai')->where('updated_at', '>=', $mulai)->groupBy('tgl')->pluck('total', 'tgl');
+
+            for ($i = 6; $i >= 0; $i--) {
+                $tgl = Carbon::now()->subDays($i)->format('Y-m-d');
+                $dataChart[] = $dibuat[$tgl] ?? 0;
+                $dataChart2[] = $selesai[$tgl] ?? 0;
+            }
+        } elseif ($user->is_driver_active) {
+            $chartTitle = 'Tren Pendapatan Ongkir (Rp)';
+            $chartLabel1 = 'Pendapatan';
+
+            $pendapatan = Titipan::select(DB::raw('DATE(updated_at) as tgl'), DB::raw('SUM(ongkir) as total'))
+                ->where('driver_id', $user->id)->where('status', 'selesai')
+                ->where('updated_at', '>=', $mulai)->groupBy('tgl')->pluck('total', 'tgl');
+
+            for ($i = 6; $i >= 0; $i--) {
+                $tgl = Carbon::now()->subDays($i)->format('Y-m-d');
+                $dataChart[] = (int) ($pendapatan[$tgl] ?? 0);
+            }
+        } else {
+            $chartTitle = 'Tren Pengeluaran Titipan (Rp)';
+            $chartLabel1 = 'Pengeluaran';
+
+            $pengeluaran = Titipan::select(DB::raw('DATE(updated_at) as tgl'), DB::raw('SUM(COALESCE(total_aktual, estimasi_total) + ongkir) as total'))
+                ->where('pembeli_id', $user->id)->where('status', 'selesai')
+                ->where('updated_at', '>=', $mulai)->groupBy('tgl')->pluck('total', 'tgl');
+
+            for ($i = 6; $i >= 0; $i--) {
+                $tgl = Carbon::now()->subDays($i)->format('Y-m-d');
+                $dataChart[] = (int) ($pengeluaran[$tgl] ?? 0);
+            }
         }
 
         $titipanTerbaru = Titipan::with(['pembeli', 'driver'])
@@ -66,8 +100,12 @@ class DashboardController extends Controller
 
         return view('dashboard', [
             'stats' => $stats,
+            'chartTitle' => $chartTitle,
+            'chartLabel1' => $chartLabel1,
+            'chartLabel2' => $chartLabel2,
             'labelChart' => $labelChart,
             'dataChart' => $dataChart,
+            'dataChart2' => $dataChart2,
             'titipanTerbaru' => $titipanTerbaru,
         ]);
     }
