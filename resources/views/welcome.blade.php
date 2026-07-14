@@ -10,7 +10,8 @@
 </head>
 <body class="font-sans antialiased bg-[#0f172a] text-slate-100 min-h-screen flex items-center justify-center px-6">
     <div class="max-w-xl text-center">
-        <div class="w-16 h-16 rounded-2xl bg-blue-500 text-[#0f172a] font-bold text-3xl flex items-center justify-center mx-auto mb-6">N</div>
+        <img src="{{ asset('images/logo.png') }}" alt="Nearty Logo"
+             class="w-24 h-24 rounded-full object-cover mx-auto mb-6 shadow-2xl ring-4 ring-blue-400/30">
         <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3">Nearty</h1>
         <p class="text-slate-300 mb-8">
             Titip beli jajanan lewat driver terdekat, tanpa perlu keluar kost.
