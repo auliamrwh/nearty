@@ -100,32 +100,35 @@ Endpoint lainnya: `POST /api/logout`, `GET /api/me`
 
 ## Screenshot
 
-> Tempel screenshot di bawah ini sebelum submit (dashboard, halaman buat titipan, mode driver, panel admin).
+> 
 
-| Halaman | Screenshot |
-|---------|------------|
-| Dashboard | _(tambahkan screenshot)_ |
-| Buat Titipan | _(tambahkan screenshot)_ |
-| Mode Driver | _(tambahkan screenshot)_ |
-| Panel Admin — Kelola User | _(tambahkan screenshot)_ |
-| Panel Admin — Moderasi Ulasan | _(tambahkan screenshot)_ |
+
+| Dashboard Admin | _(![](image.png))_ 
+| Dashboard User | ![](image-1.png)
+| Buat Titipan | _(![](image-2.png))_ 
+| Mode Driver | _(![](image-3.png))_ 
+| Panel Admin — Kelola User | _(![](image-4.png))
+| Panel Admin — Moderasi Ulasan | _(![](image-5.png))_ 
 
 ## Bug yang Diketahui
 
 - Jarak titipan baru muncul setelah browser mengizinkan akses GPS; tanpa GPS, jarak tidak tampil.
 - Pin peta di form buat titipan menggunakan OpenStreetMap (membutuhkan koneksi internet).
+- Belum terlalu paham tentang github(commit, branch, push, dll)
 
 ## Lesson Learned
 
-_(Isi setelah proyek selesai — 1-2 halaman tentang tantangan, solusi, dan pelajaran dari proyek ini.)_
+Membangun Nearty mengajarkan kami cara kerja ekosistem Laravel secara end-to-end.
+Tantangan terbesar adalah mengelola hubungan antar tabel (Titipan, ItemTitipan, Ulasan)
+dan memastikan seeder bisa dijalankan ulang dari kondisi database kosong. Kami belajar pentingnya Form Request untuk memusatkan validasi, soft delete untuk data yang tidak boleh hilang permanen, dan Haversine formula untuk menghitung jarak antar koordinat. Spatie Permission menyederhanakan kontrol akses yang sebelumnya kami bayangkan rumit. Ke depan, kami akan lebih disiplin dalam membuat branch terpisah per fitur sejak awal dan belajar memahami github
+
 
 ## Tim
 
 | Nama | NIM | Kontribusi Utama |
-|------|-----|-----------------|
-| Aulia | _(isi NIM)_ | Setup project, Dashboard, Role & Permission, Admin panel |
-| Hawa | _(isi NIM)_ | Modul Titipan (CRUD pembeli), Git |
-| Regina | _(isi NIM)_ | Mode Driver, Ulasan, REST API |
+| Aulia | _(230102027)_ | Setup project, Dashboard, Role & Permission, Admin panel |
+| Hawa | _(230102056)_ | Modul Titipan (CRUD pembeli), Git |
+| Regina | _(230102115)_ | Mode Driver, Ulasan, REST API |
 
 ---
 
