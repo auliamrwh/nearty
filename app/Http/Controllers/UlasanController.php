@@ -54,17 +54,22 @@ class UlasanController extends Controller
 
         abort_if(is_null($untukUserId), 422, 'Belum ada pasangan transaksi untuk diberi ulasan.');
 
-        Ulasan::updateOrCreate(
-            ['titipan_id' => $titipan->id, 'dari_user_id' => $user->id],
-            [
-                'untuk_user_id' => $untukUserId,
-                'peran_pemberi' => $peran,
-                'rating' => $request->rating,
-                'komentar' => $request->komentar,
-            ]
-        );
+        // Cari ulasan yang sudah ada, atau buat objek baru — hindari duplicate key error
+        $ulasan = Ulasan::firstOrNew([
+            'titipan_id'   => $titipan->id,
+            'dari_user_id' => $user->id,
+        ]);
 
-        return back()->with('success', 'Terima kasih sudah memberi ulasan!');
+        $ulasan->fill([
+            'untuk_user_id' => $untukUserId,
+            'peran_pemberi' => $peran,
+            'rating'        => $request->rating,
+            'komentar'      => $request->komentar,
+        ])->save();
+
+        $pesan = $ulasan->wasRecentlyCreated ? 'Terima kasih sudah memberi ulasan!' : 'Ulasan berhasil diperbarui!';
+
+        return back()->with('success', $pesan);
     }
 
     /** Tampilkan form edit ulasan milik user sendiri. */
