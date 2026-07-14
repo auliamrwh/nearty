@@ -47,10 +47,14 @@
                         @if($u->komentar)<p class="text-sm text-slate-500 mt-1">"{{ $u->komentar }}"</p>@endif
                         <div class="flex items-center justify-between mt-2">
                             <p class="text-xs text-slate-400">{{ $u->titipan?->lokasi_warung }} &middot; {{ $u->created_at->diffForHumans() }}</p>
-                            <form method="POST" action="{{ route('ulasan.destroy', $u) }}" onsubmit="return confirm('Hapus ulasan ini?')">
-                                @csrf @method('DELETE')
-                                <button class="text-xs text-rose-500 hover:underline">Hapus</button>
-                            </form>
+                            <div class="flex items-center gap-3">
+                                <a href="{{ route('ulasan.edit', $u) }}"
+                                   class="text-xs text-sky-600 hover:underline">Edit</a>
+                                <form method="POST" action="{{ route('ulasan.destroy', $u) }}" onsubmit="return confirm('Hapus ulasan ini?')">
+                                    @csrf @method('DELETE')
+                                    <button class="text-xs text-rose-500 hover:underline">Hapus</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 @empty

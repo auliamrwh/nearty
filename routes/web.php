@@ -32,6 +32,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/ulasan', [UlasanController::class, 'index'])->name('ulasan.index');
     Route::post('/titipan/{titipan}/ulasan', [UlasanController::class, 'store'])->name('ulasan.store');
+    Route::get('/ulasan/{ulasan}/edit', [UlasanController::class, 'edit'])->name('ulasan.edit');
+    Route::patch('/ulasan/{ulasan}', [UlasanController::class, 'update'])->name('ulasan.update');
     Route::delete('/ulasan/{ulasan}', [UlasanController::class, 'destroy'])->name('ulasan.destroy');
 });
 

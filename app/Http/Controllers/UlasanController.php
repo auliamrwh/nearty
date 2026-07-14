@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUlasanRequest;
+use App\Http\Requests\UpdateUlasanRequest;
 use App\Models\Titipan;
 use App\Models\Ulasan;
 use Illuminate\Support\Facades\Auth;
@@ -64,6 +65,27 @@ class UlasanController extends Controller
         );
 
         return back()->with('success', 'Terima kasih sudah memberi ulasan!');
+    }
+
+    /** Tampilkan form edit ulasan milik user sendiri. */
+    public function edit(Ulasan $ulasan)
+    {
+        abort_unless($ulasan->dari_user_id === Auth::id(), 403);
+
+        return view('ulasan.edit', compact('ulasan'));
+    }
+
+    /** Simpan perubahan ulasan milik user sendiri. */
+    public function update(UpdateUlasanRequest $request, Ulasan $ulasan)
+    {
+        abort_unless($ulasan->dari_user_id === Auth::id(), 403);
+
+        $ulasan->update([
+            'rating'   => $request->rating,
+            'komentar' => $request->komentar,
+        ]);
+
+        return redirect()->route('ulasan.index')->with('success', 'Ulasan berhasil diperbarui!');
     }
 
     public function destroy(Ulasan $ulasan)
