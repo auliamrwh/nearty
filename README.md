@@ -112,8 +112,6 @@ Endpoint lainnya: `POST /api/logout`, `GET /api/me`
 
 ## Bug yang Diketahui
 
-_(Isi jujur di sini kalau ada bug saat demo — kejujuran dinilai positif oleh dosen.)_
-
 - Jarak titipan baru muncul setelah browser mengizinkan akses GPS; tanpa GPS, jarak tidak tampil.
 - Pin peta di form buat titipan menggunakan OpenStreetMap (membutuhkan koneksi internet).
 
