@@ -7,10 +7,10 @@ Aplikasi web berbasis Laravel 13 untuk **titip beli jajanan lewat sesama penggun
 - **Autentikasi** — Login, Register, Logout via Laravel Breeze; validasi input & proteksi CSRF
 - **Role & Permission** — 2 role: `admin` (kelola user & moderasi) dan `user` (pengguna aplikasi), dikelola Spatie
 - **CRUD Titipan** — Buat, lihat, ubah, batalkan titipan (soft delete + alasan pembatalan)
+- **CRUD Ulasan** — Beri, lihat, edit, dan hapus ulasan rating 1–5 bintang
 - **CRUD User (Admin)** — Tambah, edit, nonaktifkan, pulihkan akun user dari panel admin
 - **Moderasi Ulasan (Admin)** — Lihat semua ulasan, filter rating, hapus ulasan
 - **Mode Driver** — Toggle available, lihat titipan terdekat (Haversine), ambil order, update status pengantaran
-- **Ulasan** — Rating 1–5 bintang + komentar antara pembeli & driver setelah selesai
 - **Dashboard** — Statistik ringkas per role (admin/pembeli/driver) + grafik tren 7 hari (Chart.js)
 - **Search & Pagination** — Di semua tabel data (titipan, user, ulasan)
 - **REST API** — 2 resource API (Titipan & Ulasan) berbasis JSON, autentikasi token Sanctum
@@ -100,35 +100,43 @@ Endpoint lainnya: `POST /api/logout`, `GET /api/me`
 
 ## Screenshot
 
-> 
+| Halaman | Screenshot |
+|---------|------------|
+| Dashboard Admin | ![Dashboard Admin](docs/screenshots/dashboard-admin.png) |
+| Dashboard User | ![Dashboard User](docs/screenshots/dashboard-user.png) |
+| Buat Titipan | ![Buat Titipan](docs/screenshots/buat-titipan.png) |
+| Mode Driver | ![Mode Driver](docs/screenshots/mode-driver.png) |
+| Panel Admin — Kelola User | ![Admin Kelola User](docs/screenshots/admin-kelola-user.png) |
+| Panel Admin — Moderasi Ulasan | ![Admin Ulasan](docs/screenshots/admin-ulasan.png) |
 
+## 🎬 Video Teaser
 
-| Dashboard Admin | _(![](image.png))_ 
-| Dashboard User | ![](image-1.png)
-| Buat Titipan | _(![](image-2.png))_ 
-| Mode Driver | _(![](image-3.png))_ 
-| Panel Admin — Kelola User | _(![](image-4.png))
-| Panel Admin — Moderasi Ulasan | _(![](image-5.png))_ 
+[▶ Tonton Demo Nearty di Google Drive](https://drive.google.com/drive/folders/10dNtNEwvidEDsm4dBgq7Ey2VMZD108fo?usp=sharing)
 
 ## Bug yang Diketahui
 
 - Jarak titipan baru muncul setelah browser mengizinkan akses GPS; tanpa GPS, jarak tidak tampil.
 - Pin peta di form buat titipan menggunakan OpenStreetMap (membutuhkan koneksi internet).
-- Belum terlalu paham tentang github(commit, branch, push, dll)
+- Belum terlalu paham tentang GitHub (commit, branch, push, dll).
 
 ## Lesson Learned
 
 Membangun Nearty mengajarkan kami cara kerja ekosistem Laravel secara end-to-end.
 Tantangan terbesar adalah mengelola hubungan antar tabel (Titipan, ItemTitipan, Ulasan)
-dan memastikan seeder bisa dijalankan ulang dari kondisi database kosong. Kami belajar pentingnya Form Request untuk memusatkan validasi, soft delete untuk data yang tidak boleh hilang permanen, dan Haversine formula untuk menghitung jarak antar koordinat. Spatie Permission menyederhanakan kontrol akses yang sebelumnya kami bayangkan rumit. Ke depan, kami akan lebih disiplin dalam membuat branch terpisah per fitur sejak awal dan belajar memahami github
-
+dan memastikan seeder bisa dijalankan ulang dari kondisi database kosong. Kami belajar
+pentingnya Form Request untuk memusatkan validasi, soft delete untuk data yang tidak boleh
+hilang permanen, dan Haversine formula untuk menghitung jarak antar koordinat. Spatie
+Permission menyederhanakan kontrol akses yang sebelumnya kami bayangkan rumit. Ke depan,
+kami akan lebih disiplin dalam membuat branch terpisah per fitur sejak awal dan belajar
+memahami GitHub lebih dalam.
 
 ## Tim
 
 | Nama | NIM | Kontribusi Utama |
-| Aulia | _(230102027)_ | Setup project, Dashboard, Role & Permission, Admin panel |
-| Hawa | _(230102056)_ | Modul Titipan (CRUD pembeli), Git |
-| Regina | _(230102115)_ | Mode Driver, Ulasan, REST API |
+|------|-----|-----------------|
+| Aulia | 230102027 | Setup project, Dashboard, Role & Permission, Admin panel |
+| Hawa | 230102056 | Modul Titipan (CRUD pembeli), Git |
+| Regina | 230102115 | Mode Driver, Ulasan, REST API |
 
 ---
 
