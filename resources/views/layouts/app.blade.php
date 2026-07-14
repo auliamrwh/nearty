@@ -19,7 +19,8 @@
             <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
                    class="fixed inset-y-0 left-0 z-40 w-64 bg-[#0f172a] text-slate-200 transform transition-all duration-300 ease-in-out hover:scale-105 active:scale-95-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-auto flex flex-col">
                 <div class="h-16 flex items-center gap-2 px-6 border-b border-white/10">
-                    <div class="w-9 h-9 rounded-xl bg-blue-500 flex items-center justify-center font-bold text-[#0f172a] text-lg">N</div>
+                    <img src="{{ asset('images/logo.png') }}" alt="Nearty Logo"
+                         class="w-10 h-10 rounded-full object-cover ring-2 ring-blue-400/40">
                     <div>
                         <p class="font-bold text-white leading-tight">Nearty</p>
                         <p class="text-[11px] text-slate-400 leading-tight">Titip aja, driver jemput</p>

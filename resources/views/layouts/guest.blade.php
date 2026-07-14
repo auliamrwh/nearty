@@ -15,7 +15,8 @@
     <body class="font-sans text-slate-800 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-slate-100">
             <a href="/" class="flex items-center gap-2 mb-2">
-                <div class="w-12 h-12 rounded-2xl bg-blue-500 text-[#0f172a] font-bold text-xl flex items-center justify-center">N</div>
+                <img src="{{ asset('images/logo.png') }}" alt="Nearty Logo"
+                     class="w-12 h-12 rounded-full object-cover shadow-md">
                 <span class="text-xl font-bold text-slate-800">Nearty</span>
             </a>
             <p class="text-xs text-slate-400 mb-4">Titip aja, driver yang jemput jajanmu</p>
