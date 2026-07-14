@@ -54,20 +54,37 @@ class UlasanController extends Controller
 
         abort_if(is_null($untukUserId), 422, 'Belum ada pasangan transaksi untuk diberi ulasan.');
 
-        // Cari ulasan yang sudah ada, atau buat objek baru — hindari duplicate key error
-        $ulasan = Ulasan::firstOrNew([
-            'titipan_id'   => $titipan->id,
-            'dari_user_id' => $user->id,
-        ]);
+        // Cari ulasan termasuk yang sudah di-soft-delete, agar tidak terjadi
+        // UniqueConstraintViolationException saat user mencoba beri ulasan ulang.
+        $ulasan = Ulasan::withTrashed()
+            ->where('titipan_id', $titipan->id)
+            ->where('dari_user_id', $user->id)
+            ->first();
 
-        $ulasan->fill([
-            'untuk_user_id' => $untukUserId,
-            'peran_pemberi' => $peran,
-            'rating'        => $request->rating,
-            'komentar'      => $request->komentar,
-        ])->save();
+        $baru = false;
+        if ($ulasan) {
+            if ($ulasan->trashed()) {
+                $ulasan->restore(); // kembalikan dari soft-delete
+            }
+            $ulasan->fill([
+                'untuk_user_id' => $untukUserId,
+                'peran_pemberi' => $peran,
+                'rating'        => $request->rating,
+                'komentar'      => $request->komentar,
+            ])->save();
+        } else {
+            Ulasan::create([
+                'titipan_id'    => $titipan->id,
+                'dari_user_id'  => $user->id,
+                'untuk_user_id' => $untukUserId,
+                'peran_pemberi' => $peran,
+                'rating'        => $request->rating,
+                'komentar'      => $request->komentar,
+            ]);
+            $baru = true;
+        }
 
-        $pesan = $ulasan->wasRecentlyCreated ? 'Terima kasih sudah memberi ulasan!' : 'Ulasan berhasil diperbarui!';
+        $pesan = $baru ? 'Terima kasih sudah memberi ulasan!' : 'Ulasan berhasil diperbarui!';
 
         return back()->with('success', $pesan);
     }
