@@ -27,6 +27,7 @@
                     </div>
                     <input type="hidden" name="latitude"  id="input-lat"  value="{{ old('latitude') }}">
                     <input type="hidden" name="longitude" id="input-lng"  value="{{ old('longitude') }}">
+                    <input type="hidden" name="sumber_lokasi" id="sumber_lokasi" value="{{ old('sumber_lokasi', 'manual') }}">
                 </div>
 
                 <div>
@@ -149,6 +150,7 @@
 
                 document.getElementById('input-lat').value = lat.toFixed(7);
                 document.getElementById('input-lng').value = lng.toFixed(7);
+                document.getElementById('sumber_lokasi').value = 'maps';
                 document.getElementById('map-info').classList.remove('hidden');
             });
         });

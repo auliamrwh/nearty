@@ -60,21 +60,9 @@ class DashboardController extends Controller
                 $dataChart[] = $dibuat[$tgl] ?? 0;
                 $dataChart2[] = $selesai[$tgl] ?? 0;
             }
-        } elseif ($user->is_driver_active) {
-            $chartTitle = 'Tren Pendapatan Ongkir (Rp)';
-            $chartLabel1 = 'Pendapatan';
-
-            $pendapatan = Titipan::select(DB::raw('DATE(updated_at) as tgl'), DB::raw('SUM(ongkir) as total'))
-                ->where('driver_id', $user->id)->where('status', 'selesai')
-                ->where('updated_at', '>=', $mulai)->groupBy('tgl')->pluck('total', 'tgl');
-
-            for ($i = 6; $i >= 0; $i--) {
-                $tgl = Carbon::now()->subDays($i)->format('Y-m-d');
-                $dataChart[] = (int) ($pendapatan[$tgl] ?? 0);
-            }
         } else {
-            $chartTitle = 'Tren Pengeluaran Titipan (Rp)';
-            $chartLabel1 = 'Pengeluaran';
+            $chartTitle = 'Tren Aktivitas (Rp)';
+            $chartLabel1 = 'Pengeluaran (Pembeli)';
 
             $pengeluaran = Titipan::select(DB::raw('DATE(updated_at) as tgl'), DB::raw('SUM(COALESCE(total_aktual, estimasi_total) + ongkir) as total'))
                 ->where('pembeli_id', $user->id)->where('status', 'selesai')
@@ -83,6 +71,19 @@ class DashboardController extends Controller
             for ($i = 6; $i >= 0; $i--) {
                 $tgl = Carbon::now()->subDays($i)->format('Y-m-d');
                 $dataChart[] = (int) ($pengeluaran[$tgl] ?? 0);
+            }
+
+            if ($user->is_driver_active) {
+                $chartLabel2 = 'Pendapatan (Driver)';
+                
+                $pendapatan = Titipan::select(DB::raw('DATE(updated_at) as tgl'), DB::raw('SUM(ongkir) as total'))
+                    ->where('driver_id', $user->id)->where('status', 'selesai')
+                    ->where('updated_at', '>=', $mulai)->groupBy('tgl')->pluck('total', 'tgl');
+
+                for ($i = 6; $i >= 0; $i--) {
+                    $tgl = Carbon::now()->subDays($i)->format('Y-m-d');
+                    $dataChart2[] = (int) ($pendapatan[$tgl] ?? 0);
+                }
             }
         }
 
@@ -118,7 +119,7 @@ class DashboardController extends Controller
             'total_driver' => User::where('is_driver_active', true)->count(),
             'total_titipan' => Titipan::count(),
             'titipan_menunggu' => Titipan::where('status', 'menunggu')->count(),
-            'titipan_diproses' => Titipan::whereIn('status', ['diambil_driver', 'diantar', 'dibayar'])->count(),
+            'titipan_diproses' => Titipan::whereIn('status', ['diambil_driver', 'dibayar'])->count(),
             'titipan_selesai' => Titipan::where('status', 'selesai')->count(),
             'titipan_dibatalkan' => Titipan::where('status', 'dibatalkan')->count(),
             'total_ongkir_terkumpul' => Titipan::where('status', 'selesai')->sum('ongkir'),
@@ -132,7 +133,7 @@ class DashboardController extends Controller
 
         return [
             'jumlah_titipan_saya' => (clone $milikSaya)->count(),
-            'sedang_diproses' => (clone $milikSaya)->whereIn('status', ['menunggu', 'diambil_driver', 'diantar', 'dibayar'])->count(),
+            'sedang_diproses' => (clone $milikSaya)->whereIn('status', ['menunggu', 'diambil_driver', 'dibayar'])->count(),
             'selesai' => (clone $milikSaya)->where('status', 'selesai')->count(),
             'dibatalkan' => (clone $milikSaya)->where('status', 'dibatalkan')->count(),
             'riwayat' => Titipan::where('pembeli_id', $user->id)
@@ -149,7 +150,7 @@ class DashboardController extends Controller
         return [
             'titipan_tersedia' => Titipan::tersedia()->where('pembeli_id', '!=', $user->id)->count(),
             'titipan_diambil' => Titipan::where('driver_id', $user->id)
-                ->whereIn('status', ['diambil_driver', 'diantar'])
+                ->whereIn('status', ['diambil_driver'])
                 ->count(),
             'riwayat' => Titipan::where('driver_id', $user->id)
                 ->whereIn('status', ['selesai', 'dibayar'])

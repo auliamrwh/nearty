@@ -14,6 +14,7 @@ class StoreTitipanRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'sumber_lokasi' => ['required', 'in:maps,manual'],
             'lokasi_warung' => ['required', 'string', 'max:255'],
             'alamat_antar' => ['required', 'string', 'max:255'],
             'metode_bayar' => ['required', 'in:qr,cod'],

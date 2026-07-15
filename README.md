@@ -118,6 +118,7 @@ Endpoint lainnya: `POST /api/logout`, `GET /api/me`
 - Jarak titipan baru muncul setelah browser mengizinkan akses GPS; tanpa GPS, jarak tidak tampil.
 - Pin peta di form buat titipan menggunakan OpenStreetMap (membutuhkan koneksi internet).
 - Belum terlalu paham tentang GitHub (commit, branch, push, dll).
+- Error pas POST titipan baru, dan ulasan
 
 ## Lesson Learned
 

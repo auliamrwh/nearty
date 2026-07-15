@@ -42,10 +42,10 @@ class UlasanController extends Controller
         $untukUserId = null;
         $peran = null;
 
-        if ($titipan->pembeli_id === $user->id) {
+        if ($titipan->pembeli_id == $user->id) {
             $untukUserId = $titipan->driver_id;
             $peran = 'pembeli';
-        } elseif ($titipan->driver_id === $user->id) {
+        } elseif ($titipan->driver_id == $user->id) {
             $untukUserId = $titipan->pembeli_id;
             $peran = 'driver';
         } else {

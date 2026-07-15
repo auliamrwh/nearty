@@ -74,7 +74,7 @@ class TitipanController extends Controller
         );
 
         $request->validate([
-            'status' => ['sometimes', 'in:menunggu,diambil_driver,diantar,dibayar,selesai,dibatalkan'],
+            'status' => ['sometimes', 'in:menunggu,diambil_driver,dibayar,selesai,dibatalkan'],
             'total_aktual' => ['sometimes', 'numeric', 'min:0'],
         ]);
 

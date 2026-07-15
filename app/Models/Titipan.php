@@ -33,7 +33,6 @@ class Titipan extends Model
     public const STATUS_LABEL = [
         'menunggu' => 'Menunggu Driver',
         'diambil_driver' => 'Diambil Driver',
-        'diantar' => 'Sedang Diantar',
         'dibayar' => 'Sudah Dibayar',
         'selesai' => 'Selesai',
         'dibatalkan' => 'Dibatalkan',

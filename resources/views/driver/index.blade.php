@@ -21,7 +21,7 @@
     </div>
 
     @if($sedangDiantar->count())
-        <h3 class="font-semibold text-slate-800 mb-3">Sedang Kamu Antar</h3>
+        <h3 class="font-semibold text-slate-800 mb-3">Sedang Kamu Proses</h3>
         <div class="grid gap-4 mb-8">
             @foreach($sedangDiantar as $t)
                 <div class="bg-white rounded-2xl border border-blue-200 p-5 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
@@ -36,9 +36,10 @@
                         @csrf @method('PATCH')
                         <input type="number" name="total_aktual" placeholder="Total belanja aktual (Rp)" class="rounded-lg border-slate-300 text-sm focus:ring-blue-500 focus:border-blue-500 w-48">
                         <select name="status" class="rounded-lg border-slate-300 text-sm focus:ring-blue-500 focus:border-blue-500">
-                            <option value="diantar" @selected($t->status==='diantar')>Sedang Diantar</option>
-                            <option value="dibayar">Sudah Dibayar</option>
-                            <option value="selesai">Selesai</option>
+                            <option value="menunggu" @selected($t->status === 'menunggu')>Menunggu Driver</option>
+                            <option value="diambil_driver" @selected($t->status === 'diambil_driver')>Diambil Driver</option>
+                            <option value="dibayar" @selected($t->status === 'dibayar')>Sudah Bayar</option>
+                            <option value="selesai" @selected($t->status === 'selesai')>Selesai</option>
                         </select>
                         <button class="px-4 py-2 rounded-lg bg-slate-800 text-white text-sm font-medium">Update Status</button>
                     </form>

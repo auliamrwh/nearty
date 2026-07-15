@@ -34,7 +34,7 @@ class TitipanSeeder extends Seeder
             [2, 'selesai',   $pembeli, $driver->id,  4000, 20000],
             [2, 'selesai',   $regina,  $driver->id,  3000, 16000],
             [1, 'selesai',   $pembeli, $driver->id,  3000, 18000],
-            [1, 'diantar',   $regina,  $driver->id,  4000, 22000],
+            [1, 'diambil_driver', $regina,  $driver->id,  4000, 22000],
         ];
 
         $warungList = [
@@ -128,7 +128,7 @@ class TitipanSeeder extends Seeder
             'estimasi_harga'=> 6000,
         ]);
 
-        // Titipan sedang diantar (status diantar untuk demo driver)
+        // Titipan sedang diambil driver (status diambil_driver untuk demo driver)
         $t_diantar = Titipan::create([
             'pembeli_id'    => $regina->id,
             'driver_id'     => $driver->id,
@@ -138,7 +138,7 @@ class TitipanSeeder extends Seeder
             'longitude'     => 107.608900,
             'alamat_antar'  => 'Kost Anggrek, Kamar 2',
             'metode_bayar'  => 'qr',
-            'status'        => 'diantar',
+            'status'        => 'diambil_driver',
             'ongkir'        => 4000,
             'estimasi_total'=> 22000,
         ]);

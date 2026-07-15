@@ -35,7 +35,7 @@ class DriverController extends Controller
         }
 
         $sedangDiantar = Titipan::where('driver_id', $user->id)
-            ->whereIn('status', ['diambil_driver', 'diantar'])
+            ->whereIn('status', ['diambil_driver', 'dibayar'])
             ->with('items', 'pembeli')
             ->get();
 
@@ -69,17 +69,21 @@ class DriverController extends Controller
         return back()->with('success', 'Titipan berhasil diambil. Yuk belanja & antar!');
     }
 
-    /** Update status pengantaran oleh driver: diambil_driver -> diantar -> dibayar -> selesai. */
+    /** Update status pengantaran oleh driver */
     public function updateStatus(Request $request, Titipan $titipan)
     {
         abort_unless($titipan->driver_id === Auth::id(), 403);
 
         $request->validate([
-            'status' => ['required', Rule::in(['diantar', 'dibayar', 'selesai'])],
+            'status'       => ['required', Rule::in(['menunggu', 'diambil_driver', 'dibayar', 'selesai'])],
             'total_aktual' => ['nullable', 'numeric', 'min:0'],
         ]);
 
         $data = ['status' => $request->status];
+
+        if ($request->status === 'menunggu') {
+            $data['driver_id'] = null; // Kembalikan order ke antrean
+        }
 
         if ($request->status === 'dibayar') {
             $data['sudah_dibayar'] = true;

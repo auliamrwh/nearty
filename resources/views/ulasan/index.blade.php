@@ -1,19 +1,30 @@
 <x-app-layout>
     @php($title = 'Ulasan')
 
-    @if($belumDiulas->isNotEmpty())
-        <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6">
-            <h3 class="font-semibold text-blue-800 mb-2 text-sm">Titipan Selesai yang Belum Kamu Ulas</h3>
+    <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6">
+        <h3 class="font-semibold text-blue-800 mb-2 text-sm">Titipan Selesai yang Belum Kamu Ulas</h3>
+        @if($belumDiulas->isNotEmpty())
             <ul class="space-y-2">
                 @foreach($belumDiulas as $t)
                     <li class="flex items-center justify-between text-sm">
-                        <span class="text-slate-700">{{ $t->lokasi_warung }} &middot; {{ $t->created_at->format('d M Y') }}</span>
+                        <span class="text-slate-700">
+                            {{ $t->lokasi_warung }} &middot; {{ $t->created_at->format('d M Y') }}
+                            <span class="text-slate-500">
+                                @if($t->pembeli_id == auth()->id())
+                                    (Driver: {{ $t->driver?->name ?? 'Belum ada' }})
+                                @else
+                                    (Pembeli: {{ $t->pembeli?->name }})
+                                @endif
+                            </span>
+                        </span>
                         <a href="{{ route('titipan.show', $t) }}" class="text-blue-700 font-medium hover:underline">Beri Ulasan &rarr;</a>
                     </li>
                 @endforeach
             </ul>
-        </div>
-    @endif
+        @else
+            <p class="text-sm text-slate-500">Semua titipan selesai sudah kamu ulas. Terima kasih!</p>
+        @endif
+    </div>
 
     <div class="grid lg:grid-cols-2 gap-6">
         <div>
